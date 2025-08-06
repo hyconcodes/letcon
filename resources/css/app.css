@@ -11,39 +11,82 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-    --color-zinc-50: #fafafa;
-    --color-zinc-100: #f5f5f5;
-    --color-zinc-200: #e5e5e5;
-    --color-zinc-300: #d4d4d4;
-    --color-zinc-400: #a3a3a3;
-    --color-zinc-500: #737373;
-    --color-zinc-600: #525252;
-    --color-zinc-700: #404040;
-    --color-zinc-800: #262626;
-    --color-zinc-900: #171717;
-    --color-zinc-950: #0a0a0a;
-
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
+    /* Letcon Global Color Palette */
+    --color-primary: #D4AF37;     /* Gold */
+    --color-secondary: #6B3E00;   /* Bronze */
+    --color-text: #2E2E2E;        /* Charcoal */
+    --color-light-bg: #FFF8E1;    /* Soft Ivory */
+    --color-border: #B0B0B0;      /* Steel Gray */
+    --color-accent: #6BBF59;      /* Money Green */
+    
+    /* Additional shades for primary (gold) */
+    --color-primary-50: #FFF8E1;  /* Lightest gold */
+    --color-primary-100: #FFF2C4; 
+    --color-primary-200: #FFEAA7;
+    --color-primary-300: #FFE28A;
+    --color-primary-400: #EECA5E;
+    --color-primary-500: #D4AF37; /* Base gold */
+    --color-primary-600: #B89429;
+    --color-primary-700: #9C7A1C;
+    --color-primary-800: #806110;
+    --color-primary-900: #644705;
+    
+    /* Additional shades for secondary (bronze) */
+    --color-secondary-50: #F5EBE0;
+    --color-secondary-100: #E6D2B8;
+    --color-secondary-200: #D7B990;
+    --color-secondary-300: #C8A068;
+    --color-secondary-400: #A97C3D;
+    --color-secondary-500: #8A5D1E;
+    --color-secondary-600: #6B3E00; /* Base bronze */
+    --color-secondary-700: #5A3300;
+    --color-secondary-800: #492800;
+    --color-secondary-900: #381D00;
+    
+    /* System colors */
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+    
+    /* Default accent settings */
+    --color-accent-content: var(--color-primary);
     --color-accent-foreground: var(--color-white);
 }
 
 @layer theme {
     .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
+        --color-primary: #EECA5E;      /* Brighter gold for dark mode */
+        --color-secondary: #A97C3D;    /* Lighter bronze for dark mode */
+        --color-text: #F5F5F5;         /* Light text for dark mode */
+        --color-light-bg: #2E2E2E;     /* Dark background */
+        --color-border: #555555;       /* Darker border for dark mode */
+        --color-accent: #8CD47A;       /* Brighter green for dark mode */
+        
+        --color-accent-content: var(--color-primary);
+        --color-accent-foreground: var(--color-secondary-900);
     }
 }
 
 @layer base {
-
     *,
     ::after,
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
+        border-color: var(--color-border, currentColor);
+    }
+    
+    body {
+        color: var(--color-text);
+        background-color: var(--color-light-bg);
+    }
+    
+    a {
+        color: var(--color-secondary);
+        transition: color 0.3s ease;
+    }
+    
+    a:hover {
+        color: var(--color-primary);
     }
 }
 
@@ -58,7 +101,24 @@
 input:focus[data-flux-control],
 textarea:focus[data-flux-control],
 select:focus[data-flux-control] {
-    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+    @apply outline-hidden ring-2 ring-primary ring-offset-2 ring-offset-light-bg;
+}
+
+/* Button styles */
+.btn-primary {
+    @apply bg-primary text-white font-medium py-2 px-4 rounded transition-colors;
+}
+
+.btn-primary:hover {
+    @apply bg-primary-600;
+}
+
+.btn-secondary {
+    @apply bg-secondary text-white font-medium py-2 px-4 rounded transition-colors;
+}
+
+.btn-secondary:hover {
+    @apply bg-secondary-400;
 }
 
 /* \[:where(&)\]:size-4 {
