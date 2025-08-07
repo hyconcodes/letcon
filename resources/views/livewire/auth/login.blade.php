@@ -40,7 +40,13 @@ new #[Layout('components.layouts.auth')] class extends Component {
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        // Check user role and redirect accordingly
+        $user = Auth::user();
+        if ($user->hasRole('member')) {
+            $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        } else if ($user->hasAnyRole(['super-admin', 'admin'])) {
+            $this->redirectIntended(default: route('admin.dashboard', absolute: false), navigate: true);
+        }
     }
 
     /**

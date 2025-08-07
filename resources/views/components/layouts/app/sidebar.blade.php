@@ -9,13 +9,19 @@
     <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
-        <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
+        <a href="{{ auth()->user()->hasRole(['super-admin', 'admin'])
+                        ? route('admin.dashboard') 
+                        : route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
             <x-app-logo />
         </a>
 
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Platform')" class="grid">
-                <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
+                <flux:navlist.item icon="home" 
+                    :href="auth()->user()->hasRole(['super-admin', 'admin'])
+                        ? route('admin.dashboard') 
+                        : route('dashboard')"
+                    :current="request()->routeIs('dashboard') || request()->routeIs('admin.dashboard')"
                     wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
 
                 @canany(['view.roles', 'create.roles', 'update.roles', 'delete.roles'])
@@ -26,6 +32,11 @@
                 @canany(['view.member', 'create.member', 'update.member', 'delete.member'])
                     <flux:navlist.item icon="users" :href="route('members')" :current="request()->routeIs('members')"
                         wire:navigate>{{ __('Manage Members') }}</flux:navlist.item>
+                @endcanany
+
+                @canany(['view.wallet', 'fund.wallet', 'withdraw.wallet'])
+                    <flux:navlist.item icon="wallet" :href="route('wallets')" :current="request()->routeIs('wallets')"
+                        wire:navigate>{{ __('Wallets') }}</flux:navlist.item>
                 @endcanany
             </flux:navlist.group>
         </flux:navlist>

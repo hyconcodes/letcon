@@ -3,6 +3,7 @@
 use Livewire\Volt\Component;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 new class extends Component {
     public $users;
@@ -33,6 +34,7 @@ new class extends Component {
             ]);
 
             $user->assignRole('member');
+            $user->sendEmailVerificationNotification();
             $this->reset(['name', 'email', 'password']);
             $this->users = User::role('member')->get();
             

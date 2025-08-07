@@ -23,6 +23,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'referral_code',
+        'referred_by',
     ];
 
     /**
@@ -56,7 +58,31 @@ class User extends Authenticatable implements MustVerifyEmail
         return Str::of($this->name)
             ->explode(' ')
             ->take(2)
-            ->map(fn ($word) => Str::substr($word, 0, 1))
+            ->map(fn($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    /**
+     * Get the user's referral code
+     */
+    public function getReferralCodeAttribute(): string
+    {
+        return $this->referral_code ?? Str::random(8);
+    }
+
+    /**
+     * Get the user's referrals
+     */
+    public function referrals()
+    {
+        return $this->hasMany(User::class, 'referred_by');
+    }
+
+    /**
+     * Get the user's referrer
+     */
+    public function referrer()
+    {
+        return $this->belongsTo(User::class, 'referred_by');
     }
 }

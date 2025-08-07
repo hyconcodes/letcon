@@ -1,9 +1,11 @@
 <?php
 
 use App\Models\User;
+use App\Models\Referral;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -13,6 +15,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
     public string $email = '';
     public string $password = '';
     public string $password_confirmation = '';
+    public string $ref_code = '';
 
     /**
      * Handle an incoming registration request.
@@ -23,11 +26,56 @@ new #[Layout('components.layouts.auth')] class extends Component {
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'ref_code' => ['nullable', 'string']
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+        if ($this->ref_code) {
+            $referrer = User::where('referral_code', $this->ref_code)->first();
+            
+            if (!$referrer) {
+                $this->addError('ref_code', 'Invalid referral code. Please check and try again.');
+                return;
+            }
 
-        event(new Registered(($user = User::create($validated))));
+            $referralCount = $referrer->referrals()->count();
+            if ($referralCount >= 4) {
+                $this->addError('ref_code', 'This referral code has reached its limit, not allow!!!');
+                return;
+            }
+        }
+
+        $validated['password'] = Hash::make($validated['password']);
+        $validated['referral_code'] = strtoupper(Str::random(8));
+
+        $user = User::create($validated);
+
+        if ($this->ref_code && isset($referrer)) {
+            $user->referred_by = $referrer->id;
+            $user->save();
+
+            Referral::create([
+                'referrer_id' => $referrer->id,
+                'referred_id' => $user->id,
+            ]);
+        } else {
+            // Get the oldest user with less than 4 referrals
+            $referrer = User::withCount('referrals')
+                ->having('referrals_count', '<', 4)
+                ->orderBy('created_at', 'asc')
+                ->first();
+
+            if ($referrer) {
+                $user->referred_by = $referrer->id;
+                $user->save();
+
+                Referral::create([
+                    'referrer_id' => $referrer->id,
+                    'referred_id' => $user->id,
+                ]);
+            }
+        }
+
+        event(new Registered($user));
 
         Auth::login($user);
 
@@ -83,6 +131,15 @@ new #[Layout('components.layouts.auth')] class extends Component {
             autocomplete="new-password"
             :placeholder="__('Confirm password')"
             viewable
+        />
+
+        <!-- Referral Code -->
+        <flux:input
+            wire:model="ref_code"
+            :label="__('Referral Code')"
+            type="text"
+            autocomplete="off"
+            :placeholder="__('Referral Code (optional)')"
         />
 
         <div class="flex items-center justify-end">

@@ -20,6 +20,6 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        // User::where('email', 'aladeyeluadesola6@gmail.com')->update(['email_verified_at' => now()]);
+        // User::where('email', 'haliatolabisi@gmail.com')->update(['email_verified_at' => now()]);
     }
 }
