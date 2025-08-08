@@ -4,11 +4,11 @@ use Livewire\Volt\Component;
 
 new class extends Component {
     public $balance = 0; // Example balance
-    
+
     public function mount()
     {
         // Initialize data
-        $this->balance = auth()->user()->wallet_balance ?? 10000;
+        $this->balance = auth()->user()->wallet_balance ?? 0;
     }
 }; ?>
 
@@ -18,7 +18,27 @@ new class extends Component {
         <h1 class="text-3xl font-bold text-yellow-600">My Wallet</h1>
         <p class="mt-2 text-gray-600">Manage your funds, transactions and financial activities</p>
     </div>
+    @if (session()->has('error'))
+        <div class="bg-red-500 text-white p-4 rounded-md mb-4 flex justify-between items-center">
+            <span>{{ session('error') }}</span>
+            <button onclick="this.parentElement.remove()" class="focus:outline-none">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    @endif
 
+    @if (session()->has('success'))
+        <div class="bg-green-500 text-white p-4 rounded-md mb-4 flex justify-between items-center">
+            <span>{{ session('success') }}</span>
+            <button onclick="this.parentElement.remove()" class="focus:outline-none">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    @endif
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Available Balance Card -->
         <div class="bg-white rounded-lg shadow p-6">
@@ -31,7 +51,8 @@ new class extends Component {
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-800">Fund your e-wallet</h3>
             <p class="text-sm text-gray-600 my-2">Add money to your wallet</p>
-            <a href="{{ route('deposits') }}" class="bg-green-500 text-white px-4 py-2 rounded text-sm hover:bg-green-600">Fund Now</a>
+            <a href="{{ route('boards', ['message' => 'Please subscribe to level 1 and make payment']) }}" 
+               class="bg-green-500 text-white px-4 py-2 rounded text-sm hover:bg-green-600">Fund Now</a>
         </div>
 
         <!-- Withdraw Card -->
@@ -73,7 +94,8 @@ new class extends Component {
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-800">Deposit History</h3>
             <p class="text-sm text-gray-600 my-2">Past deposit records</p>
-            <button class="bg-orange-500 text-white px-4 py-2 rounded text-sm hover:bg-orange-600">View Deposits</button>
+            <button class="bg-orange-500 text-white px-4 py-2 rounded text-sm hover:bg-orange-600">View
+                Deposits</button>
         </div>
     </div>
 </div>

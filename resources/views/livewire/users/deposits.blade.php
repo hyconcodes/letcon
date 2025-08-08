@@ -6,6 +6,16 @@ new class extends Component {
     public function depositPaystack()
     {
         try {
+            // Check if user has already made one-time payment
+            $existingPayment = App\Models\Payment::where('user_id', auth()->id())
+                ->where('status', 'paid')
+                ->first();
+
+            if ($existingPayment) {
+                session()->flash('error', 'You have already made the one-time payment.');
+                return redirect()->back();
+            }
+
             $client = new \GuzzleHttp\Client();
             
             // Generate unique reference
@@ -37,10 +47,26 @@ new class extends Component {
                 return redirect($result->data->authorization_url);
             }
 
-            throw new \Exception('Could not initialize Paystack payment');
+            // Log the error for failed initialization
+            \Log::error('Paystack payment initialization failed: Payment could not be initialized', [
+                'user_id' => auth()->id(),
+                'reference' => $reference,
+                'response' => $result
+            ]);
+            
+            session()->flash('error', 'We encountered an issue processing your payment. Our team has been notified. Please try again in a few minutes.');
+            return redirect()->back();
 
         } catch (\Exception $e) {
-            session()->flash('error', 'Payment initialization failed: ' . $e->getMessage());
+            // Log detailed error information
+            \Log::error('Paystack payment initialization failed: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'reference' => $reference ?? null
+            ]);
+            
+            session()->flash('error', 'We\'re currently experiencing technical difficulties with our payment system. Please try again later or contact support if the issue persists.');
             return redirect()->back();
         }
     }
@@ -58,14 +84,24 @@ new class extends Component {
     </div>
 
     @if (session()->has('error'))
-        <div class="bg-red-500 text-white p-4 rounded-md mb-4">
-            {{ session('error') }}
+        <div class="bg-red-500 text-white p-4 rounded-md mb-4 flex justify-between items-center">
+            <span>{{ session('error') }}</span>
+            <button onclick="this.parentElement.remove()" class="focus:outline-none">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
         </div>
     @endif
 
     @if (session()->has('success'))
-        <div class="bg-green-500 text-white p-4 rounded-md mb-4">
-            {{ session('success') }}
+        <div class="bg-green-500 text-white p-4 rounded-md mb-4 flex justify-between items-center">
+            <span>{{ session('success') }}</span>
+            <button onclick="this.parentElement.remove()" class="focus:outline-none">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
         </div>
     @endif
 

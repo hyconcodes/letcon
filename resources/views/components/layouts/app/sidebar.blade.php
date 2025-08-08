@@ -38,6 +38,11 @@
                     <flux:navlist.item icon="wallet" :href="route('wallets')" :current="request()->routeIs('wallets')"
                         wire:navigate>{{ __('Wallets') }}</flux:navlist.item>
                 @endcanany
+
+                @canany(['view.board'])
+                    <flux:navlist.item icon="arrow-trending-up" :href="route('boards')" :current="request()->routeIs('boards')"
+                        wire:navigate>{{ __('Boards Level') }}</flux:navlist.item>
+                @endcanany
             </flux:navlist.group>
         </flux:navlist>
 

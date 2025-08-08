@@ -37,10 +37,18 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('users/wallets-sys', 'users.wallets')
     ->middleware(['permission:view.wallet|fund.wallet|withdraw.wallet'])
     ->name('wallets');
-
     Volt::route('users/deposits-sys', 'users.deposits')
     ->middleware(['permission:fund.wallet'])
     ->name('deposits');
+    Volt::route('users/deposits-sys-log', 'users.deposits-log')
+    ->middleware(['permission:fund.wallet|view.wallet'])
+    ->name('deposits.log');
+    Volt::route('users/boards-sys', 'users.boards')
+    ->middleware(['permission:view.board'])
+    ->name('boards');
+    Volt::route('users/boards/{level}/trees-sys', 'users.trees')
+    ->middleware(['permission:view.tree'])
+    ->name('trees');
 
     // Volt::route('admin/withdrawals-management', 'admins.withdrawals')->name('withdrawals');
     // Volt::route('admin/deposits-management', 'admins.deposits')->name('deposits');

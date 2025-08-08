@@ -8,19 +8,7 @@
                 </svg>
                 <div class="mb-4">
                     <p class="text-sm opacity-75">Current Balance</p>
-                    <p class="text-2xl font-bold">₦5,240,000</p>
-                </div>
-                <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button>
-            </div>
-
-            <!-- Total Withdraw Card - Green -->
-            <div class="relative overflow-hidden rounded-xl bg-green-500 p-4 text-white shadow-lg">
-                <svg class="absolute right-2 top-2 h-8 w-8 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <div class="mb-4">
-                    <p class="text-sm opacity-75">Total Withdraw</p>
-                    <p class="text-2xl font-bold">₦2,180,000</p>
+                    <p class="text-2xl font-bold">₦0.00</p>
                 </div>
                 <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button>
             </div>
@@ -32,10 +20,22 @@
                 </svg>
                 <div class="mb-4">
                     <p class="text-sm opacity-75">Total Deposit</p>
-                    <p class="text-2xl font-bold">₦8,430,000</p>
+                    <p class="text-2xl font-bold">₦{{ number_format(Auth::user()->payment()->where('status', 'paid')->sum('amount') ?? 0, 2) }}</p>
+                </div>
+                <a href="{{ route('deposits.log') }}" class="rounded-lg bg-white/20 px-3 py-1 text-sm text-white hover:bg-white/30">View</a>
+            </div>
+            <!-- Total Withdraw Card - Green -->
+            <div class="relative overflow-hidden rounded-xl bg-green-500 p-4 text-white shadow-lg">
+                <svg class="absolute right-2 top-2 h-8 w-8 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div class="mb-4">
+                    <p class="text-sm opacity-75">Total Withdraw</p>
+                    <p class="text-2xl font-bold">₦0.00</p>
                 </div>
                 <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button>
             </div>
+
 
             <!-- Pending Withdraw Card - Orange -->
             <div class="relative overflow-hidden rounded-xl bg-orange-500 p-4 text-white shadow-lg">
@@ -44,7 +44,7 @@
                 </svg>
                 <div class="mb-4">
                     <p class="text-sm opacity-75">Pending Withdraw</p>
-                    <p class="text-2xl font-bold">₦3,650,000</p>
+                    <p class="text-2xl font-bold">₦0.00</p>
                 </div>
                 <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button>
             </div>
@@ -56,7 +56,7 @@
                 </svg>
                 <div class="mb-4">
                     <p class="text-sm opacity-75">Reject Withdraw</p>
-                    <p class="text-2xl font-bold">₦1,920,000</p>
+                    <p class="text-2xl font-bold">₦0.00</p>
                 </div>
                 <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button>
             </div>

@@ -43,9 +43,12 @@ class RolePermissionSeeder extends Seeder
             // 'update.roles',
             // 'delete.roles',
 
-            'view.wallet',
-            'fund.wallet',
-            'withdraw.wallet',
+            // 'view.wallet',
+            // 'fund.wallet',
+            // 'withdraw.wallet',
+
+            // 'view.board',
+            'view.tree',
         ];
 
         foreach ($permissions as $permission) {
