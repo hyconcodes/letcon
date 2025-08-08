@@ -48,7 +48,7 @@ class RolePermissionSeeder extends Seeder
             // 'withdraw.wallet',
 
             // 'view.board',
-            'view.tree',
+            // 'view.tree',
         ];
 
         foreach ($permissions as $permission) {

@@ -8,7 +8,7 @@
                 </svg>
                 <div class="mb-4">
                     <p class="text-sm opacity-75">Current Balance</p>
-                    <p class="text-2xl font-bold">₦0.00</p>
+                    <p class="text-2xl font-bold">₦{{ number_format(Auth::user()->wallet()->sum('earned_balance') ?? 0, 2) }}</p>
                 </div>
                 <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button>
             </div>

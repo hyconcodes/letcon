@@ -48,6 +48,9 @@ new #[Layout('components.layouts.auth')] class extends Component {
         $validated['referral_code'] = strtoupper(Str::random(8));
 
         $user = User::create($validated);
+        
+        // Assign member role using Spatie
+        $user->assignRole('member');
 
         if ($this->ref_code && isset($referrer)) {
             $user->referred_by = $referrer->id;
