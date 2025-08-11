@@ -58,7 +58,7 @@ new class extends Component {
         <!-- Heading -->
         <div class="text-center mb-10">
             <h1 class="text-3xl font-bold text-[#FFD700]">LETCON BOARD PORTFOLIO</h1>
-            <p class="text-lg text-gray-500 mt-2">
+            <p class="text-lg text-white-500 mt-2">
                 Choose your investment level and start earning
             </p>
         </div>

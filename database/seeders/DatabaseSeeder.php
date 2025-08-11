@@ -54,46 +54,45 @@ class DatabaseSeeder extends Seeder
 
 
         //
-        $userNames = [
-            'Tyler Wooten',
-            'Rudyard English',
-            'Zelda Bass',
-            'Ashton Calhoun',
-            'Ina Pitts',
-            'Dale Morin',
-            'Ferris Zamora',
-            'Evan Carney',
-            'Amity Campos',
-            'Kamal Curtis',
-            'Cynthia Webb',
-            'Jordan Koch',
-            'Ishmael Schmidt',
-            'Quyn Hall',
-            'Kane Medina',
-            'Wanda Frye'
-        ];
+        // $userEmails = [
+        //     'xozexefol@mailinator.com',
+        //     'xonobizyj@mailinator.com', 
+        //     'giwimosovy@mailinator.com',
+        //     'hizi@mailinator.com'
+        // ];
 
-        foreach ($userNames as $name) {
-            $user = User::where('name', $name)->first();
-            if ($user) {
-                // Create payment record
-                $payment = Payment::create([
-                    'user_id' => $user->id,
-                    'amount' => 20000,
-                    'status' => 'paid',
-                    'reference' => 'SEED_' . uniqid(),
-                    'payment_method' => 'paystack',
-                    'payment_method_code' => 'card'
-                ]);
+        // foreach ($userEmails as $email) {
+        //     $user = User::where('email', $email)->first();
+        //     if ($user) {
+        //         // Create payment record
+        //         $payment = Payment::create([
+        //             'user_id' => $user->id,
+        //             'amount' => 20000,
+        //             'status' => 'paid',
+        //             'reference' => 'SEED_' . uniqid(),
+        //             'payment_method' => 'paystack',
+        //             'payment_method_code' => 'card'
+        //         ]);
 
-                // Create or update wallet
-                $wallet = Wallet::firstOrCreate(
-                    ['user_id' => $user->id],
-                    ['balance' => 0]
-                );
+        //         // Create or update wallet
+        //         $wallet = Wallet::firstOrCreate(
+        //             ['user_id' => $user->id],
+        //             ['balance' => 0]
+        //         );
 
-                $wallet->increment('balance', 20000);
-            }
-        }
+        //         $wallet->increment('balance', 20000);
+        //     }
+        // }
+
+
+
+        
+        // $all_users = User::all();
+        // foreach ($all_users as $user) {
+        //     $user->referred_by = null;
+        //     $user->save();
+
+        //     info($user->name . ' referred by: ' . $user->referred_by);
+        // }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Levelhistory;
 use App\Models\Payment;
 use App\Models\Referral;
 use App\Models\User;
@@ -21,7 +22,7 @@ class ProcessReferralUpgrades extends Command
      * @var string
      */
     // protected $signature = 'ref-upgrade';
-    protected $signature = 'letcon:process-upgrades';
+    protected $signature = 'ref';
 
     /**
      * The console command description.
@@ -34,137 +35,132 @@ class ProcessReferralUpgrades extends Command
      * Execute the console command.
      */
 
-    // Required referrals per level
-    protected $levelRequirements = [
-        1 => 4,
-        2 => 16,
-        3 => 64,
-        4 => 256,
-        5 => 1024,
-        6 => 4096,
-        7 => 16384,
-        8 => 65536,
-        9 => null // Level 10 is final
-    ];
-
-    // Earnings per level (after deduction)
-    protected $earningsPerLevel = [
-        1 => 32000,
-        2 => 64000,
-        3 => 128000,
-        4 => 256000,
-        5 => 512000,
-        6 => 1024000,
-        7 => 2048000,
-        8 => 4096000,
-        9 => 20000000
-    ];
-
     public function handle()
     {
         Log::info("==== Letcon Cron Started ====");
         $this->info("==== Letcon Cron Started ====");
 
-        // Get all users who are not level 10 yet
         $users = User::where('level', '<', 10)->get();
+        $upgradedUsers = [];
 
         foreach ($users as $user) {
-            $this->processUser($user);
+            $this->processUser($user, $upgradedUsers);
+        }
+
+        // Upgrade summary
+        if (!empty($upgradedUsers)) {
+            $summary = "=== Upgrade Summary ===\n";
+            foreach ($upgradedUsers as $upgrade) {
+                $summary .= "User: {$upgrade['name']} (ID: {$upgrade['id']}) - ";
+                $summary .= "Upgraded to Level {$upgrade['new_level']}, Earned ₦{$upgrade['earnings']}\n";
+            }
+            Log::info($summary);
+            $this->info($summary);
+        } else {
+            Log::info("No users were upgraded in this run.");
+            $this->info("No users were upgraded in this run.");
         }
 
         Log::info("==== Letcon Cron Completed ====");
         $this->info("==== Letcon Cron Completed ====");
     }
 
-    private function processUser(User $user)
+    private function processUser(User $user, &$upgradedUsers)
     {
         $currentLevel = $user->level;
-
-        // If already at max level
         if ($currentLevel >= 10) {
             return;
         }
 
-        $requiredCount = $this->levelRequirements[$currentLevel] ?? null;
-        if (!$requiredCount) {
+        if ($currentLevel == 1) {
+            $count = $this->countPaidReferrals($user->id);
+            if ($count >= 4) {
+                $this->upgradeUser($user, $upgradedUsers);
+            }
             return;
         }
 
-        // Count qualified referrals at required depth
-        $count = $this->countQualifiedReferrals($user->id, $currentLevel);
-
-        $this->info("User {$user->id} (Level {$currentLevel}) has {$count} qualified referrals, needs {$requiredCount}");
-        Log::info("User {$user->id} (Level {$currentLevel}) has {$count} qualified referrals, needs {$requiredCount}");
-
-        if ($count >= $requiredCount) {
-            $this->upgradeUser($user);
+        // For level 2 and above
+        $arrivalsCount = $this->countNewArrivalsToLevel($user);
+        if ($arrivalsCount >= 4) {
+            $this->upgradeUser($user, $upgradedUsers);
         }
     }
 
-    private function countQualifiedReferrals($userId, $level)
+    private function countPaidReferrals($userId)
     {
-        // Depth needed = current level’s required count formula
-        $depth = $level; // Level 1 = depth 1, Level 2 = depth 2, etc.
-
-        $visited = [];
-        $queue = [ ['id' => $userId, 'depth' => 0] ];
-        $qualified = 0;
-
-        while (!empty($queue)) {
-            $current = array_shift($queue);
-            $currentId = $current['id'];
-            $currentDepth = $current['depth'];
-
-            if ($currentDepth >= $depth) {
-                continue;
-            }
-
-            $referrals = Referral::where('referrer_id', $currentId)
-                ->with('referredUser')
-                ->get();
-
-            foreach ($referrals as $ref) {
-                $refUser = $ref->referredUser;
-                if (!$refUser) continue;
-
-                // Level 1 check payments, others only check existence
-                if ($level == 1) {
-                    $hasPaid = Payment::where('user_id', $refUser->id)
-                        ->where('status', 'paid')
-                        ->where('amount', 20000)
-                        ->exists();
-                    if (!$hasPaid) {
-                        continue;
-                    }
-                }
-
-                $qualified++;
-                $queue[] = ['id' => $refUser->id, 'depth' => $currentDepth + 1];
-            }
-        }
-
-        return $qualified;
+        return Referral::where('referrer_id', $userId)
+            ->whereHas('referredUser', function ($q) {
+                $q->whereHas('payments', function ($p) {
+                    $p->where('status', 'paid')->where('amount', 20000);
+                });
+            })
+            ->count();
     }
 
-    private function upgradeUser(User $user)
+    private function countNewArrivalsToLevel(User $user)
+    {
+        // Find when this user entered their current level
+        $history = LevelHistory::where('user_id', $user->id)
+            ->where('to_level', $user->level)
+            ->orderBy('upgraded_at', 'desc')
+            ->first();
+
+        if (!$history) {
+            return 0;
+        }
+
+        // Count how many other users entered this level after him
+        return Levelhistory::where('to_level', $user->level)
+            ->where('upgraded_at', '>', $history->upgraded_at)
+            ->count();
+    }
+
+    private function upgradeUser(User $user, &$upgradedUsers)
     {
         $currentLevel = $user->level;
         $nextLevel = $currentLevel + 1;
 
-        // Earnings after deduction
-        $earnings = $this->earningsPerLevel[$currentLevel] ?? 0;
+        $earningsPerLevel = [
+            1 => 32000,
+            2 => 64000,
+            3 => 128000,
+            4 => 256000,
+            5 => 512000,
+            6 => 1024000,
+            7 => 2048000,
+            8 => 4096000,
+            9 => 20000000
+        ];
+
+        $earnings = $earningsPerLevel[$currentLevel] ?? 0;
 
         // Update wallet
         $wallet = Wallet::firstOrCreate(['user_id' => $user->id]);
         $wallet->earned_balance += $earnings;
         $wallet->save();
 
-        // Upgrade user
+        // Save level change
         $user->level = $nextLevel;
-        $user->upgraded_at = now();
         $user->save();
 
-        $this->info("User {$user->name}: with ID: {$user->id} upgraded from Level {$currentLevel} to Level {$nextLevel}, earned ₦{$earnings}");
-        Log::info("User {$user->name}: with ID: {$user->id} upgraded from Level {$currentLevel} to Level {$nextLevel}, earned ₦{$earnings}");
+        // Record in history
+        LevelHistory::create([
+            'user_id' => $user->id,
+            'from_level' => $currentLevel,
+            'to_level' => $nextLevel,
+            'upgraded_at' => now()
+        ]);
+
+        $message = "User {$user->name} (ID {$user->id}) upgraded from Level {$currentLevel} to Level {$nextLevel}, earned ₦{$earnings}";
+        $this->info($message);
+        Log::info($message);
+
+        $upgradedUsers[] = [
+            'name' => $user->name,
+            'id' => $user->id,
+            'new_level' => $nextLevel,
+            'earnings' => $earnings
+        ];
     }
 }

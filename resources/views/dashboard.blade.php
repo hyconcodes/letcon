@@ -1,4 +1,26 @@
 <x-layouts.app :title="__(config('app.name') . ' - Dashboard')">
+    @if(session('status'))
+        <div id="alert-message" class="relative bg-green-500 text-white p-4 rounded-md mb-4">
+            {{ session('status') }}
+            <button onclick="closeAlert()" class="absolute top-1/2 right-4 transform -translate-y-1/2">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+
+        <script>
+            // Auto-hide alert after 3 seconds
+            setTimeout(function() {
+                document.getElementById('alert-message')?.remove();
+            }, 3000);
+
+            // Function to close alert manually
+            function closeAlert() {
+                document.getElementById('alert-message')?.remove();
+            }
+        </script>
+    @endif
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <div class="grid auto-rows-min gap-4 md:grid-cols-3 lg:grid-cols-5">
             <!-- Current Balance Card - Blue -->

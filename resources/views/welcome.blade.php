@@ -1189,7 +1189,13 @@
                 <a href="#">Contact</a>
                 <a href="{{ route('login') }}">Login</a>
                 <a href="{{ route('register') }}">Register</a>
-                <a href="{{ route('dashboard') }}" style="color: var(--primary-color);">My Dashboard</a>
+                @auth
+                    @if(auth()->user()->hasRole('super-admin'))
+                        <a href="{{ route('admin.dashboard') }}" style="color: var(--primary-color);">Admin Dashboard</a>
+                    @else
+                        <a href="{{ route('dashboard') }}" style="color: var(--primary-color);">My Dashboard</a>
+                    @endif
+                @endauth
             </nav>
         </div>
     </header>

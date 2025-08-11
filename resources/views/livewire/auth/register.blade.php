@@ -39,8 +39,12 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
             $referralCount = $referrer->referrals()->count();
             if ($referralCount >= 4) {
-                $this->addError('ref_code', 'This referral code has reached its limit, not allow!!!');
-                return;
+                // Instead of showing error, get the oldest user with less than 4 referrals
+                $referrer = User::where('id', '!=', 1)
+                    ->withCount('referrals')
+                    ->having('referrals_count', '<', 4)
+                    ->orderBy('created_at', 'asc')
+                    ->first();
             }
         }
 
@@ -61,8 +65,9 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 'referred_id' => $user->id,
             ]);
         } else {
-            // Get the oldest user with less than 4 referrals
-            $referrer = User::withCount('referrals')
+            // Get the oldest user with less than 4 referrals, excluding user with ID 1
+            $referrer = User::where('id', '!=', 1)
+                ->withCount('referrals')
                 ->having('referrals_count', '<', 4)
                 ->orderBy('created_at', 'asc')
                 ->first();
@@ -81,6 +86,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
         event(new Registered($user));
 
         Auth::login($user);
+
+        session()->flash('status', "Welcome {$this->name}! Your account has been created successfully.");
 
         $this->redirectIntended(route('dashboard', absolute: false), navigate: true);
     }

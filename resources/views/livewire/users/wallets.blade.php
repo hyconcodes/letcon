@@ -3,12 +3,12 @@
 use Livewire\Volt\Component;
 
 new class extends Component {
-    public $balance = 0; // Example balance
+    public $earned_balance = 0; // Example earned_balance
 
     public function mount()
     {
         // Initialize data
-        $this->balance = auth()->user()->wallet_balance ?? 0;
+        $this->earned_balance = auth()->user()->wallet()->sum('earned_balance') ?? 0;
     }
 }; ?>
 
@@ -16,7 +16,7 @@ new class extends Component {
     <!-- Page Header -->
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-yellow-600">My Wallet</h1>
-        <p class="mt-2 text-gray-600">Manage your funds, transactions and financial activities</p>
+        <p class="mt-2 text-white-600">Manage your funds, transactions and financial activities</p>
     </div>
     @if (session()->has('error'))
         <div class="bg-red-500 text-white p-4 rounded-md mb-4 flex justify-between items-center">
@@ -43,7 +43,7 @@ new class extends Component {
         <!-- Available Balance Card -->
         <div class="bg-white rounded-lg shadow p-6">
             <h3 class="text-lg font-semibold text-gray-800">Available Earned</h3>
-            <p class="text-2xl font-bold text-green-600 my-2">₦{{ number_format($balance, 2) }}</p>
+            <p class="text-2xl font-bold text-green-600 my-2">₦{{ number_format($earned_balance, 2) }}</p>
             <button class="bg-blue-500 text-white px-4 py-2 rounded text-sm hover:bg-blue-600">View Details</button>
         </div>
 
