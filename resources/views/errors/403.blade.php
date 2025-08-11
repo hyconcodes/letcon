@@ -21,14 +21,18 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="flex space-x-4">
+        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full px-4 sm:px-0 sm:w-auto">
+            <a href="{{ route('home') }}" 
+               class="w-full sm:w-auto px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-center">
+                Home
+            </a>
             <a href="{{ url()->previous() }}" 
-               class="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+               class="w-full sm:w-auto px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-center">
                 Go Back
             </a>
             <a href="{{ route('logout') }}" 
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-               class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+               class="w-full sm:w-auto px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-center">
                 Logout
             </a>
         </div>

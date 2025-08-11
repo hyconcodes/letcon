@@ -21,13 +21,16 @@
         </div>
 
         <!-- Navigation Buttons -->
-        <div class="flex space-x-4">
-            <a href="{{ url()->previous() }}" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+        <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full px-4 sm:w-auto">
+            <a href="{{ url('/') }}" class="w-full sm:w-auto px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-center">
+                Home
+            </a>
+            <a href="{{ url()->previous() }}" class="w-full sm:w-auto px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-center">
                 Go Back
             </a>
             <a href="{{ route('logout') }}" 
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
-               class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+               class="w-full sm:w-auto px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors text-center">
                 Logout
             </a>
         </div>

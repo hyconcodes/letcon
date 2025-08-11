@@ -10,18 +10,12 @@
     <!-- Favicon -->
     <style>
         :root {
-            --primary-color: #D4AF37;
-            /* Gold */
-            --secondary-color: #6B3E00;
-            /* Bronze */
-            --text-color: #2E2E2E;
-            /* Charcoal */
-            --light-bg: #FFF8E1;
-            /* Soft Ivory */
-            --border-color: #B0B0B0;
-            /* Steel Gray */
-            --accent-color: #6BBF59;
-            /* Money Green */
+            --primary-color: #2ecc71; /* Emerald Green */
+            --secondary-color: #27ae60; /* Darker Emerald Green */
+            --text-color: #333333; /* Dark Gray */
+            --light-bg: #f0fdf4; /* Light Green Background */
+            --border-color: #cccccc; /* Light Gray */
+            --accent-color: #3498db; /* Complementary Blue */
         }
 
         * {
@@ -139,7 +133,7 @@
 
         .btn-primary {
             background-color: var(--primary-color);
-            color: var(--secondary-color);
+            color: white;
             padding: 10px 25px;
             border-radius: 25px;
             text-decoration: none;
@@ -365,7 +359,7 @@
 
         .newsletter-button {
             background-color: var(--primary-color);
-            color: var(--secondary-color);
+            color: white;
             border: none;
             padding: 10px 15px;
             border-radius: 0 4px 4px 0;
@@ -510,18 +504,12 @@
     <!-- Additional Styles -->
     <style>
         :root {
-            --primary-color: #D4AF37;
-            /* Gold */
-            --secondary-color: #6B3E00;
-            /* Bronze */
-            --text-color: #2E2E2E;
-            /* Charcoal */
-            --light-bg: #FFF8E1;
-            /* Soft Ivory */
-            --border-color: #B0B0B0;
-            /* Steel Gray */
-            --accent-color: #6BBF59;
-            /* Money Green */
+            --primary-color: #2ecc71; /* Emerald Green */
+            --secondary-color: #27ae60; /* Darker Emerald Green */
+            --text-color: #333333; /* Dark Gray */
+            --light-bg: #f0fdf4; /* Light Green Background */
+            --border-color: #cccccc; /* Light Gray */
+            --accent-color: #3498db; /* Complementary Blue */
         }
 
         * {
@@ -586,26 +574,17 @@
     <!-- Styles -->
     <style>
         :root {
-            --primary-color: #D4AF37;
-            /* Gold */
-            --secondary-color: #6B3E00;
-            /* Bronze */
-            --accent-color: #6BBF59;
-            /* Money Green */
-            --text-color: #2E2E2E;
-            /* Charcoal */
+            --primary-color: #2ecc71; /* Emerald Green */
+            --secondary-color: #27ae60; /* Darker Emerald Green */
+            --accent-color: #3498db; /* Complementary Blue */
+            --text-color: #333333; /* Dark Gray */
             --light-text: #666;
             --background-color: #fff;
-            --light-background: #FFF8E1;
-            /* Soft Ivory */
-            --border-color: #B0B0B0;
-            /* Steel Gray */
-            --success-color: #6BBF59;
-            /* Money Green */
-            --warning-color: #D4AF37;
-            /* Gold */
-            --error-color: #6B3E00;
-            /* Bronze */
+            --light-background: #f0fdf4; /* Light Green Background */
+            --border-color: #cccccc; /* Light Gray */
+            --success-color: #2ecc71; /* Emerald Green */
+            --warning-color: #f1c40f; /* Yellow */
+            --error-color: #e74c3c; /* Red */
             --border-radius: 4px;
             --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
@@ -713,7 +692,7 @@
 
         .btn-primary {
             background-color: var(--primary-color);
-            color: var(--secondary-color);
+            color: white;
             padding: 10px 25px;
             border-radius: 25px;
             text-decoration: none;
@@ -993,7 +972,7 @@
 
         .newsletter-button {
             background-color: var(--primary-color);
-            color: var(--secondary-color);
+            color: white;
             border: none;
             padding: 10px 15px;
             border-radius: 0 4px 4px 0;
