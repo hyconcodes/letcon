@@ -105,4 +105,17 @@ class User extends Authenticatable // implements MustVerifyEmail
     {
         return $this->hasMany(Payment::class, 'user_id');
     }
+
+    /**
+     * Get the user's level history
+     */
+    public function levelHistory()
+    {
+        return $this->hasMany(Levelhistory::class, 'user_id');
+    }
+
+    public function referredBy()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

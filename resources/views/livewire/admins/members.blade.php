@@ -1,22 +1,26 @@
 <?php
-
 use Livewire\Volt\Component;
 use App\Models\User;
+use App\Models\Referral;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Str;
 new class extends Component {
     public $users;
     public $name = '';
     public $email = '';
     public $password = '';
+    public $ref_code = '';
+    public $phone = '';
     public $editingUser = null;
     public $confirmingDeletion = false;
     public $userToDelete = null;
     public $notification = null;
 
     public function mount() {
-        $this->users = User::role('member')->get();
+        $this->users = User::role('member')
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
     public function createMember() {
@@ -24,24 +28,27 @@ new class extends Component {
             $this->validate([
                 'name' => 'required|min:3',
                 'email' => 'required|email|unique:users,email',
-                'password' => 'required|min:8'
+                'password' => 'required|min:8',
+                'ref_code' => 'nullable|string',
+                'phone' => 'nullable|string'
             ]);
-
+            
             $user = User::create([
                 'name' => $this->name,
                 'email' => $this->email,
-                'password' => bcrypt($this->password)
+                'password' => bcrypt($this->password),
+                'referral_code' => strtoupper(Str::random(8)),
+                'phone' => $this->phone
             ]);
 
             $user->assignRole('member');
-            $user->sendEmailVerificationNotification();
-            $this->reset(['name', 'email', 'password']);
-            $this->users = User::role('member')->get();
-            
+
             $this->notification = [
                 'type' => 'success',
                 'message' => 'Member created successfully!'
             ];
+
+            $this->reset(['name', 'email', 'password', 'ref_code', 'phone']);
         } catch (\Exception $e) {
             $this->notification = [
                 'type' => 'error',
@@ -51,9 +58,10 @@ new class extends Component {
     }
 
     public function editMember($userId) {
-        $this->editingUser = User::find($userId);
+        $this->editingUser = User::findOrFail($userId);
         $this->name = $this->editingUser->name;
         $this->email = $this->editingUser->email;
+        $this->phone = $this->editingUser->phone;
     }
 
     public function updateMember() {
@@ -61,12 +69,14 @@ new class extends Component {
             $this->validate([
                 'name' => 'required|min:3',
                 'email' => 'required|email|unique:users,email,' . $this->editingUser->id,
+                'phone' => 'nullable|string',
                 'password' => 'nullable|min:8'
             ]);
 
             $data = [
                 'name' => $this->name,
                 'email' => $this->email,
+                'phone' => $this->phone,
             ];
 
             if ($this->password) {
@@ -74,13 +84,13 @@ new class extends Component {
             }
 
             $this->editingUser->update($data);
-            $this->reset(['name', 'email', 'password', 'editingUser']);
-            $this->users = User::role('member')->get();
-            
+
             $this->notification = [
                 'type' => 'success',
                 'message' => 'Member updated successfully!'
             ];
+
+            $this->reset(['editingUser', 'name', 'email', 'password', 'phone']);
         } catch (\Exception $e) {
             $this->notification = [
                 'type' => 'error',
@@ -90,20 +100,19 @@ new class extends Component {
     }
 
     public function confirmDelete($userId) {
-        $this->userToDelete = User::find($userId);
+        $this->userToDelete = User::findOrFail($userId);
         $this->confirmingDeletion = true;
     }
 
     public function deleteMember() {
         try {
             $this->userToDelete->delete();
-            $this->reset(['confirmingDeletion', 'userToDelete']);
-            $this->users = User::role('member')->get();
-            
             $this->notification = [
                 'type' => 'success',
                 'message' => 'Member deleted successfully!'
             ];
+            $this->reset(['confirmingDeletion', 'userToDelete']);
+            $this->users = User::role('member')->orderBy('created_at', 'desc')->get();
         } catch (\Exception $e) {
             $this->notification = [
                 'type' => 'error',
@@ -118,6 +127,11 @@ new class extends Component {
 }; ?>
 
 <main class="p-4">
+    <div class="mb-6">
+        <h1 class="text-3xl font-bold text-secondary-900 dark:text-white">Member Management</h1>
+        <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-400">Manage your organization's members - create, edit and remove member accounts.</p>
+    </div>
+
     @if($notification)
     <div class="mb-4">
         <div class="rounded-md p-4 {{ $notification['type'] === 'success' ? 'bg-primary-50 dark:bg-primary-900/50' : 'bg-secondary-50 dark:bg-secondary-900/50' }}">
@@ -171,12 +185,26 @@ new class extends Component {
             </div>
 
             <div>
+                <label class="block text-sm font-medium text-secondary-700 dark:text-secondary-300">Phone</label>
+                <flux:input type="text" wire:model="phone" class="mt-1 block w-full rounded-md border-secondary-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-800 dark:border-secondary-600 dark:text-white"/>
+                @error('phone') <span class="text-secondary-500 text-sm">{{ $message }}</span> @enderror
+            </div>
+
+            <div>
                 <label class="block text-sm font-medium text-secondary-700 dark:text-secondary-300">
                     Password {{ $editingUser ? '(leave blank to keep current)' : '' }}
                 </label>
                 <flux:input type="password" wire:model="password" class="mt-1 block w-full rounded-md border-secondary-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-800 dark:border-secondary-600 dark:text-white"/>
                 @error('password') <span class="text-secondary-500 text-sm">{{ $message }}</span> @enderror
             </div>
+
+            @if(!$editingUser)
+            <div>
+                <label class="block text-sm font-medium text-secondary-700 dark:text-secondary-300">Referral Code (Optional)</label>
+                <flux:input type="text" wire:model="ref_code" class="mt-1 block w-full rounded-md border-secondary-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-800 dark:border-secondary-600 dark:text-white"/>
+                @error('ref_code') <span class="text-secondary-500 text-sm">{{ $message }}</span> @enderror
+            </div>
+            @endif
 
             <flux:button type="submit" class="btn-primary">
                 {{ $editingUser ? 'Update Member' : 'Create Member' }}
@@ -191,20 +219,40 @@ new class extends Component {
                 <table class="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
                     <thead class="bg-zinc-50 dark:bg-zinc-800">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Name</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Email</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Profile</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Info</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Level & Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-zinc-800 divide-y divide-secondary-200 dark:divide-secondary-700">
                         @foreach($users as $user)
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-secondary-900 dark:text-white">
-                                {{ $user->name }}
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    @if($user->picture)
+                                        <img class="h-10 w-10 rounded-full object-cover" src="{{ $user->picture }}" alt="{{ $user->name }}">
+                                    @else
+                                        <div class="h-10 w-10 rounded-full bg-secondary-200 dark:bg-secondary-700 flex items-center justify-center">
+                                            <svg class="h-6 w-6 text-secondary-500 dark:text-secondary-400" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                                            </svg>
+                                        </div>
+                                    @endif
+                                </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-secondary-900 dark:text-white">
-                                {{ $user->email }}
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-secondary-900 dark:text-white font-medium">{{ $user->name }}</div>
+                                <div class="text-sm text-secondary-500 dark:text-secondary-400">{{ $user->email }}</div>
+                                <div class="text-sm text-secondary-500 dark:text-secondary-400">{{ $user->phone }}</div>
                             </td>
+                            <td class="px-6 py-4">
+                                <div class="text-sm text-secondary-900 dark:text-white">Level: {{ $user->level ?? 'Basic' }}</div>
+                                <div class="text-sm text-secondary-500 dark:text-secondary-400">
+                                    Upgraded: {{ $user->levelHistory()->latest()->first()?->created_at->format('F j, Y g:i A') ?? 'Not upgraded yet' }}
+                                </div>
+                            </td>
+                            
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <button wire:click="editMember({{ $user->id }})" class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 mr-3">
                                     Edit

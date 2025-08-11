@@ -41,7 +41,12 @@
 
                 @canany(['view.board'])
                     <flux:navlist.item icon="arrow-trending-up" :href="route('boards')" :current="request()->routeIs('boards')"
-                        wire:navigate>{{ __('Boards Level') }}</flux:navlist.item>
+                        wire:navigate>{{ __('Stage Level') }}</flux:navlist.item>
+                @endcanany
+
+                @canany(['view.payment'])
+                    <flux:navlist.item icon="credit-card" :href="route('payments')" :current="request()->routeIs('payments')"
+                        wire:navigate>{{ __('Manage Payments') }}</flux:navlist.item>
                 @endcanany
             </flux:navlist.group>
         </flux:navlist>

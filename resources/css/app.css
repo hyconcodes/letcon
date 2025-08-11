@@ -12,36 +12,36 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     /* Letcon Global Color Palette */
-    --color-primary: #D4AF37;     /* Gold */
-    --color-secondary: #6B3E00;   /* Bronze */
+    --color-primary: #059669;     /* Emerald Green */
+    --color-secondary: #10B981;   /* Light Emerald */
     --color-text: #2E2E2E;        /* Charcoal */
-    --color-light-bg: #FFF8E1;    /* Soft Ivory */
+    --color-light-bg: #F5F7FA;    /* Light Blue-Gray */
     --color-border: #B0B0B0;      /* Steel Gray */
-    --color-accent: #6BBF59;      /* Money Green */
+    --color-accent: #059669;      /* Emerald Accent */
     
-    /* Additional shades for primary (gold) */
-    --color-primary-50: #FFF8E1;  /* Lightest gold */
-    --color-primary-100: #FFF2C4; 
-    --color-primary-200: #FFEAA7;
-    --color-primary-300: #FFE28A;
-    --color-primary-400: #EECA5E;
-    --color-primary-500: #D4AF37; /* Base gold */
-    --color-primary-600: #B89429;
-    --color-primary-700: #9C7A1C;
-    --color-primary-800: #806110;
-    --color-primary-900: #644705;
+    /* Additional shades for primary (emerald) */
+    --color-primary-50: #ECFDF5;  /* Lightest emerald */
+    --color-primary-100: #D1FAE5;
+    --color-primary-200: #A7F3D0;
+    --color-primary-300: #6EE7B7;
+    --color-primary-400: #34D399;
+    --color-primary-500: #10B981; /* Base emerald */
+    --color-primary-600: #059669;
+    --color-primary-700: #047857;
+    --color-primary-800: #065F46;
+    --color-primary-900: #064E3B;
     
-    /* Additional shades for secondary (bronze) */
-    --color-secondary-50: #F5EBE0;
-    --color-secondary-100: #E6D2B8;
-    --color-secondary-200: #D7B990;
-    --color-secondary-300: #C8A068;
-    --color-secondary-400: #A97C3D;
-    --color-secondary-500: #8A5D1E;
-    --color-secondary-600: #6B3E00; /* Base bronze */
-    --color-secondary-700: #5A3300;
-    --color-secondary-800: #492800;
-    --color-secondary-900: #381D00;
+    /* Additional shades for secondary (light emerald) */
+    --color-secondary-50: #ECFDF5;
+    --color-secondary-100: #D1FAE5;
+    --color-secondary-200: #A7F3D0;
+    --color-secondary-300: #6EE7B7;
+    --color-secondary-400: #34D399;
+    --color-secondary-500: #10B981;
+    --color-secondary-600: #059669;
+    --color-secondary-700: #047857;
+    --color-secondary-800: #065F46;
+    --color-secondary-900: #064E3B;
     
     /* System colors */
     --color-white: #FFFFFF;
@@ -54,12 +54,12 @@
 
 @layer theme {
     .dark {
-        --color-primary: #EECA5E;      /* Brighter gold for dark mode */
-        --color-secondary: #A97C3D;    /* Lighter bronze for dark mode */
+        --color-primary: #34D399;      /* Lighter emerald for dark mode */
+        --color-secondary: #6EE7B7;    /* Pale emerald for dark mode */
         --color-text: #F5F5F5;         /* Light text for dark mode */
-        --color-light-bg: #2E2E2E;     /* Dark background */
-        --color-border: #555555;       /* Darker border for dark mode */
-        --color-accent: #8CD47A;       /* Brighter green for dark mode */
+        --color-light-bg: #065F46;     /* Dark emerald background */
+        --color-border: #10B981;       /* Emerald-tinted border for dark mode */
+        --color-accent: #34D399;       /* Light emerald accent for dark mode */
         
         --color-accent-content: var(--color-primary);
         --color-accent-foreground: var(--color-secondary-900);

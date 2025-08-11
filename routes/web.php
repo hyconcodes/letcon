@@ -30,6 +30,10 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('admin/members-management', 'admins.members')
     ->middleware(['permission:view.member|edit.member|create.member|delete.member'])
     ->name('members');
+
+    Volt::route('admin/payments-management-sys', 'admins.payments')
+    ->middleware(['permission:view.payment|edit.payment|create.payment|delete.payment'])
+    ->name('payments');
     // Volt::route('admin/withdrawals-management', 'admins.withdrawals')->name('withdrawals');
     // Volt::route('admin/deposits-management', 'admins.deposits')->name('deposits');
     
