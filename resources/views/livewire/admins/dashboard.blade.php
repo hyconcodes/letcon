@@ -2,8 +2,19 @@
 
 use Livewire\Volt\Component;
 use App\Models\User;
+use App\Models\Payment;
+use Carbon\Carbon;
 
 new class extends Component {
+    public $memberStats = [];
+    public $paymentStats = [];
+    
+    public function mount()
+    {
+        $this->loadMemberStats();
+        $this->loadPaymentStats();
+    }
+
     public function getMemberCount()
     {
         return User::role('member')->count();
@@ -12,6 +23,29 @@ new class extends Component {
     public function getAgentCount() 
     {
         return User::role('admin')->count();
+    }
+
+    private function loadMemberStats()
+    {
+        $this->memberStats = User::role('member')
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->whereDate('created_at', '>=', Carbon::now()->subDays(7))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->pluck('count', 'date')
+            ->toArray();
+    }
+
+    private function loadPaymentStats()
+    {
+        $this->paymentStats = Payment::selectRaw('DATE(created_at) as date, SUM(amount) as total')
+            ->whereDate('created_at', '>=', Carbon::now()->subDays(7))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->pluck('total', 'date')
+            ->toArray();
     }
 }; ?>
 
@@ -49,10 +83,65 @@ new class extends Component {
             </div>
         </div>
 
-        <div
-            class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-800">
+        <div class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-800">
             <h2 class="mb-4 text-xl font-bold">User Statistics</h2>
-            <!-- Add user statistics content here -->
+            <div class="grid gap-4 md:grid-cols-2">
+                <!-- Member Registration Chart -->
+                <div class="rounded-lg border p-4">
+                    <h3 class="mb-3 text-lg font-semibold">New Member Registrations (Last 7 Days)</h3>
+                    <div class="h-64">
+                        <canvas id="memberChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Payment Statistics Chart -->
+                <div class="rounded-lg border p-4">
+                    <h3 class="mb-3 text-lg font-semibold">Payment Statistics (Last 7 Days)</h3>
+                    <div class="h-64">
+                        <canvas id="paymentChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Member Registration Chart
+    const memberCtx = document.getElementById('memberChart').getContext('2d');
+    new Chart(memberCtx, {
+        type: 'line',
+        data: {
+            labels: @json(array_keys($memberStats)),
+            datasets: [{
+                label: 'New Members',
+                data: @json(array_values($memberStats)),
+                borderColor: 'rgb(59, 130, 246)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    // Payment Statistics Chart
+    const paymentCtx = document.getElementById('paymentChart').getContext('2d');
+    new Chart(paymentCtx, {
+        type: 'bar',
+        data: {
+            labels: @json(array_keys($paymentStats)),
+            datasets: [{
+                label: 'Payment Amount',
+                data: @json(array_values($paymentStats)),
+                backgroundColor: 'rgb(34, 197, 94)',
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+</script>

@@ -4,6 +4,7 @@ use Livewire\Volt\Component;
 use App\Models\Payment;
 use App\Models\User;
 use Livewire\WithPagination;
+use Carbon\Carbon;
 
 new class extends Component {
     use WithPagination;
@@ -13,6 +14,7 @@ new class extends Component {
     public $search = '';
     public $confirmingDelete = false;
     public $deleteId = null;
+    public $paymentStats = [];
     
     public $user_id;
     public $amount;
@@ -22,6 +24,10 @@ new class extends Component {
     public $payment_method;
     public $payment_method_code;
     public $currency;
+
+    public function mount() {
+        $this->loadPaymentStats();
+    }
 
     public function with(): array
     {
@@ -36,7 +42,19 @@ new class extends Component {
 
         return [
             'payments' => $payments,
+            'paymentStats' => $this->paymentStats
         ];
+    }
+
+    private function loadPaymentStats()
+    {
+        $this->paymentStats = Payment::selectRaw('DATE(created_at) as date, SUM(amount) as total')
+            ->whereDate('created_at', '>=', Carbon::now()->subDays(7))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->pluck('total', 'date')
+            ->toArray();
     }
 
     public function editPayment($id) {
@@ -90,6 +108,7 @@ new class extends Component {
         ];
         
         $this->editingPayment = null;
+        $this->loadPaymentStats();
     }
 
     public function confirmDelete($id) {
@@ -123,6 +142,7 @@ new class extends Component {
         
         $this->confirmingDelete = false;
         $this->deleteId = null;
+        $this->loadPaymentStats();
     }
 
     public function cancelDelete() {
@@ -135,6 +155,16 @@ new class extends Component {
     <div class="mb-6">
         <h1 class="text-3xl font-bold text-secondary-900 dark:text-white">Payment Management</h1>
         <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-400">View and manage payment transactions.</p>
+    </div>
+
+    <!-- Payment Statistics Chart -->
+    <div class="mb-6">
+        <div class="rounded-lg border p-4">
+            <h3 class="mb-3 text-lg font-semibold">Payment Statistics (Last 7 Days)</h3>
+            <div class="h-64">
+                <canvas id="paymentChart"></canvas>
+            </div>
+        </div>
     </div>
 
     @if($notification)
@@ -167,6 +197,27 @@ new class extends Component {
         </div>
     </div>
     @endif
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Payment Statistics Chart
+        const paymentCtx = document.getElementById('paymentChart').getContext('2d');
+        new Chart(paymentCtx, {
+            type: 'bar',
+            data: {
+                labels: @json(array_keys($paymentStats)),
+                datasets: [{
+                    label: 'Payment Amount',
+                    data: @json(array_values($paymentStats)),
+                    backgroundColor: 'rgb(34, 197, 94)',
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
 
     <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-sm">
         <div class="p-4">

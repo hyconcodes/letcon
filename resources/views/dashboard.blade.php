@@ -10,17 +10,57 @@
         </div>
 
         <script>
-            // Auto-hide alert after 3 seconds
             setTimeout(function() {
                 document.getElementById('alert-message')?.remove();
             }, 3000);
 
-            // Function to close alert manually
             function closeAlert() {
                 document.getElementById('alert-message')?.remove();
             }
         </script>
     @endif
+
+    @php
+        $user = Auth::user();
+        $totalPaidAmount = $user->payment()->where('status', 'paid')->sum('amount');
+        $incompleteProfile = !$user->phone 
+            || !$user->picture 
+            || !$user->country 
+            || !$user->state 
+            || !$user->city 
+            || !$user->address 
+            || !$user->bank_name 
+            || !$user->bank_account_name 
+            || !$user->bank_account_number 
+            || !$user->pin;
+    @endphp
+
+    @if($incompleteProfile)
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+            <p class="font-bold">Important Notice!</p>
+            <p>Please complete your profile by updating the following information:</p>
+            {{-- <ul class="list-disc ml-6 mt-2">
+                @if(!$user->phone)<li>Phone Number</li>@endif
+                @if(!$user->picture)<li>Profile Picture</li>@endif
+                @if(!$user->country)<li>Country</li>@endif
+                @if(!$user->state)<li>State</li>@endif
+                @if(!$user->city)<li>City</li>@endif
+                @if(!$user->address)<li>Address</li>@endif
+                @if(!$user->bank_name)<li>Bank Name</li>@endif
+                @if(!$user->bank_account_name)<li>Bank Account Name</li>@endif
+                @if(!$user->bank_account_number)<li>Bank Account Number</li>@endif
+                @if(!$user->pin)<li>PIN</li>@endif
+            </ul> --}}
+        </div>
+    @endif
+
+    @if($totalPaidAmount < 20000)
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+            <p class="font-bold">Deposit Requirement Notice!</p>
+            <p>Note that withdrawals are only available from level 2.</p>
+        </div>
+    @endif
+
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <div class="grid auto-rows-min gap-4 md:grid-cols-3 lg:grid-cols-5">
             <!-- Current Balance Card - Blue -->
@@ -42,10 +82,11 @@
                 </svg>
                 <div class="mb-4">
                     <p class="text-sm opacity-75">Total Deposit</p>
-                    <p class="text-2xl font-bold">₦{{ number_format(Auth::user()->payment()->where('status', 'paid')->sum('amount') ?? 0, 2) }}</p>
+                    <p class="text-2xl font-bold">₦{{ number_format($totalPaidAmount, 2) }}</p>
                 </div>
                 <a href="{{ route('deposits.log') }}" class="rounded-lg bg-white/20 px-3 py-1 text-sm text-white hover:bg-white/30">View</a>
             </div>
+
             <!-- Total Withdraw Card - Green -->
             <div class="relative overflow-hidden rounded-xl bg-green-500 p-4 text-white shadow-lg">
                 <svg class="absolute right-2 top-2 h-8 w-8 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,7 +98,6 @@
                 </div>
                 <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button>
             </div>
-
 
             <!-- Pending Withdraw Card - Orange -->
             <div class="relative overflow-hidden rounded-xl bg-orange-500 p-4 text-white shadow-lg">
