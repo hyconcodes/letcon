@@ -48,6 +48,10 @@
                     <flux:navlist.item icon="credit-card" :href="route('payments')" :current="request()->routeIs('payments')"
                         wire:navigate>{{ __('Manage Payments') }}</flux:navlist.item>
                 @endcanany
+                @canany(['view.agent', 'create.agent', 'update.agent', 'delete.agent'])
+                    <flux:navlist.item icon="user" :href="route('agents')" :current="request()->routeIs('agents')"
+                        wire:navigate>{{ __('Manage Agents') }}</flux:navlist.item>
+                @endcanany
             </flux:navlist.group>
         </flux:navlist>
 

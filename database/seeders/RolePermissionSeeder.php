@@ -50,10 +50,15 @@ class RolePermissionSeeder extends Seeder
             // 'view.board',
             // 'view.tree',
 
-            'view.payment',
-            'create.payment',
-            'update.payment',
-            'delete.payment',
+            // 'view.payment',
+            // 'create.payment',
+            // 'update.payment',
+            // 'delete.payment',
+
+            'view.agent',
+            'create.agent',
+            'update.agent',
+            'delete.agent',
         ];
 
         foreach ($permissions as $permission) {

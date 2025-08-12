@@ -40,7 +40,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
             $referralCount = $referrer->referrals()->count();
             if ($referralCount >= 4) {
                 // Instead of showing error, get the oldest user with less than 4 referrals
-                $referrer = User::where('id', '!=', 1)
+                $referrer = User::role('member')
+                    ->where('id', '!=', 1)
                     ->withCount('referrals')
                     ->having('referrals_count', '<', 4)
                     ->orderBy('created_at', 'asc')
@@ -66,7 +67,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
             ]);
         } else {
             // Get the oldest user with less than 4 referrals, excluding user with ID 1
-            $referrer = User::where('id', '!=', 1)
+            $referrer = User::role('member')
+                ->where('id', '!=', 1)
                 ->withCount('referrals')
                 ->having('referrals_count', '<', 4)
                 ->orderBy('created_at', 'asc')
