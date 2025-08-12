@@ -53,7 +53,7 @@ new class extends Component {
                     <div wire:click="showUserDetails({{ $currentUser->id }})"
                         class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-4 border-gold-400 shadow-lg flex items-center justify-center bg-white cursor-pointer hover:border-blue-500 transition-colors">
                         @if ($currentUser->picture)
-                            <img src="{{ Storage::url($currentUser->picture) }}" alt="Profile Photo"
+                            <img src="{{ asset('storage/' . $currentUser->picture) }}" alt="Profile Photo"
                                 class="w-full h-full object-cover">
                         @else
                             <svg class="w-8 h-8 md:w-12 md:h-12 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
@@ -87,7 +87,7 @@ new class extends Component {
                                         <div wire:click="showUserDetails({{ $referral->id }})"
                                             class="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border-2 border-gold-400 shadow-lg flex items-center justify-center bg-white cursor-pointer hover:border-blue-500 transition-colors">
                                             @if ($referral->picture)
-                                                <img src="{{ Storage::url($referral->picture) }}" alt="Profile Photo"
+                                                <img src="{{ asset('storage/' . $referral->picture) }}" alt="Profile Photo"
                                                     class="w-full h-full object-cover">
                                             @else
                                                 <svg class="w-6 h-6 md:w-8 md:h-8 text-yellow-500" fill="currentColor"
@@ -129,7 +129,7 @@ new class extends Component {
                     <div
                         class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2 border-gold-400 dark:border-gold-600 mr-3 md:mr-4">
                         @if ($selectedUser->picture)
-                            <img src="{{ Storage::url($selectedUser->picture) }}" alt="Profile Photo"
+                            <img src="{{ asset('storage/' . $selectedUser->picture) }}" alt="Profile Photo"
                                 class="w-full h-full object-cover">
                         @else
                             <svg class="w-full h-full text-yellow-500 dark:text-yellow-400 p-4" fill="currentColor"
