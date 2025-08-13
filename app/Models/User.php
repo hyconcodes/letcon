@@ -22,6 +22,7 @@ class User extends Authenticatable // implements MustVerifyEmail
     protected $fillable = [
         'name',
         'email',
+        'username',
         'password',
         'referral_code',
         'referred_by',
@@ -129,4 +130,12 @@ class User extends Authenticatable // implements MustVerifyEmail
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    /**
+     * Get the user's notifications
+     */
+    // public function notifications()
+    // {
+    //     return $this->hasMany(Notification::class, 'user_id');
+    // }
 }

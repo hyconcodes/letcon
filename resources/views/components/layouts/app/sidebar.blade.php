@@ -48,10 +48,28 @@
                     <flux:navlist.item icon="credit-card" :href="route('payments')" :current="request()->routeIs('payments')"
                         wire:navigate>{{ __('Manage Payments') }}</flux:navlist.item>
                 @endcanany
+
                 @canany(['view.agent', 'create.agent', 'update.agent', 'delete.agent'])
                     <flux:navlist.item icon="user" :href="route('agents')" :current="request()->routeIs('agents')"
                         wire:navigate>{{ __('Manage Agents') }}</flux:navlist.item>
                 @endcanany
+
+                @canany(['view.notification', 'create.notification', 'update.notification', 'delete.notification'])
+                    <flux:navlist.item icon="bell" :href="route('notifications')" :current="request()->routeIs('notifications')"
+                        wire:navigate>{{ __('Manage Notifications') }}</flux:navlist.item>
+                @endcanany
+
+                @role('member')
+                <flux:navlist.group heading="Transaction Logs" expandable>
+                    <flux:navlist.item href="{{ route('earnings.log') }}">Earning History</flux:navlist.item>
+                    <flux:navlist.item href="{{ route('deposits.log') }}">Deposit History</flux:navlist.item>
+                    <flux:navlist.item href="#">Withdrawal History</flux:navlist.item>
+                </flux:navlist.group>
+                @endrole()
+
+                <flux:navlist.item icon="user" :href="route('settings.profile')" :current="request()->routeIs('settings.profile')"
+                            wire:navigate>{{ __('Profile Settings') }}
+                </flux:navlist.item>
             </flux:navlist.group>
         </flux:navlist>
 

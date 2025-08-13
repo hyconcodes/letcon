@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Models\Referral;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Models\Earning;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -135,32 +136,52 @@ class ProcessReferralUpgrades extends Command
 
         $earnings = $earningsPerLevel[$currentLevel] ?? 0;
 
-        // Update wallet
-        $wallet = Wallet::firstOrCreate(['user_id' => $user->id]);
-        $wallet->earned_balance += $earnings;
-        $wallet->save();
+        try {
+            DB::beginTransaction();
 
-        // Save level change
-        $user->level = $nextLevel;
-        $user->save();
+            // Update wallet
+            $wallet = Wallet::firstOrCreate(['user_id' => $user->id]);
+            $wallet->earned_balance += $earnings;
+            $wallet->save();
 
-        // Record in history
-        LevelHistory::create([
-            'user_id' => $user->id,
-            'from_level' => $currentLevel,
-            'to_level' => $nextLevel,
-            'upgraded_at' => now()
-        ]);
+            // Save level change
+            $user->level = $nextLevel;
+            $user->save();
 
-        $message = "User {$user->name} (ID {$user->id}) upgraded from Level {$currentLevel} to Level {$nextLevel}, earned ₦{$earnings}";
-        $this->info($message);
-        Log::info($message);
+            // Record in history
+            LevelHistory::create([
+                'user_id' => $user->id,
+                'from_level' => $currentLevel,
+                'to_level' => $nextLevel,
+                'upgraded_at' => now()
+            ]);
 
-        $upgradedUsers[] = [
-            'name' => $user->name,
-            'id' => $user->id,
-            'new_level' => $nextLevel,
-            'earnings' => $earnings
-        ];
+            // Record the earning transaction
+            Earning::create([
+                'user_id' => $user->id,
+                'amount' => $earnings,
+                'type' => 'level_upgrade',
+                'description' => "Level upgrade earnings from Level {$currentLevel} to Level {$nextLevel}",
+                'earned_at' => now()
+            ]);
+
+            DB::commit();
+
+            $message = "User {$user->name} (ID {$user->id}) upgraded from Level {$currentLevel} to Level {$nextLevel}, earned ₦{$earnings}";
+            $this->info($message);
+            Log::info($message);
+
+            $upgradedUsers[] = [
+                'name' => $user->name,
+                'id' => $user->id,
+                'new_level' => $nextLevel,
+                'earnings' => $earnings
+            ];
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Error upgrading user {$user->id}: " . $e->getMessage());
+            $this->error("Failed to upgrade user {$user->id}");
+        }
     }
 }

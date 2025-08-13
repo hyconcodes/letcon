@@ -86,7 +86,7 @@ class DatabaseSeeder extends Seeder
 
 
 
-        
+
         // $all_users = User::all();
         // foreach ($all_users as $user) {
         //     $user->referred_by = null;
@@ -94,5 +94,28 @@ class DatabaseSeeder extends Seeder
 
         //     info($user->name . ' referred by: ' . $user->referred_by);
         // }
+
+
+        // create a super admin user
+        User::create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@gmail.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('password'),
+            'username' => 'superadmin',
+        ]);
+
+        // assign super admin role
+        $superAdmin = User::where('username', 'superadmin')->first();
+        $superAdmin->assignRole('super-admin');
+
+        // create username for all users that does not have username
+
+        $users = User::whereNull('username')->get();
+
+        foreach ($users as $user) {
+            $user->username = strtolower(str_replace(' ', '', $user->name));
+            $user->save();
+        }
     }
 }

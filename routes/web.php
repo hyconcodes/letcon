@@ -38,6 +38,10 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('admin/payments-management-sys', 'admins.payments')
     ->middleware(['permission:view.payment|update.payment|create.payment|delete.payment'])
     ->name('payments');
+
+    Volt::route('admin/notification-sys', 'admins.notifications')
+    ->middleware(['permission:view.notification|update.notification|create.notification|delete.notification'])
+    ->name('notifications');
     // Volt::route('admin/withdrawals-management', 'admins.withdrawals')->name('withdrawals');
     // Volt::route('admin/deposits-management', 'admins.deposits')->name('deposits');
     
@@ -57,6 +61,9 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('users/boards/{level}/trees-sys', 'users.trees')
     ->middleware(['permission:view.tree'])
     ->name('trees');
+    Volt::route('users/earnings-logs', 'users.earnings-log')
+    ->middleware(['role:member'])
+    ->name('earnings.log');
 
     // Volt::route('admin/withdrawals-management', 'admins.withdrawals')->name('withdrawals');
     // Volt::route('admin/deposits-management', 'admins.deposits')->name('deposits');
