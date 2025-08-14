@@ -42,8 +42,9 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('admin/notification-sys', 'admins.notifications')
     ->middleware(['permission:view.notification|update.notification|create.notification|delete.notification'])
     ->name('notifications');
-    // Volt::route('admin/withdrawals-management', 'admins.withdrawals')->name('withdrawals');
-    // Volt::route('admin/deposits-management', 'admins.deposits')->name('deposits');
+    Volt::route('admin/withdrawals-management', 'admins.withdrawals')
+    ->middleware(['permission:view.withdrawal|update.withdrawal|create.withdrawal|delete.withdrawal'])
+    ->name('admin.withdrawals');
     
     // Member routes
     Volt::route('users/wallets-sys', 'users.wallets')
@@ -64,8 +65,12 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('users/earnings-logs', 'users.earnings-log')
     ->middleware(['role:member'])
     ->name('earnings.log');
-
-    // Volt::route('admin/withdrawals-management', 'admins.withdrawals')->name('withdrawals');
+    Volt::route('users/withdrawals-sys', 'users.withdraws')
+    ->middleware(['permission:withdraw.wallet'])
+    ->name('withdrawal');
+    Volt::route('users/withdrawals-log-sys', 'users.withdrawal-log')
+    ->middleware(['permission:withdraw.wallet|view.wallet'])
+    ->name('withdrawal.log');
     // Volt::route('admin/deposits-management', 'admins.deposits')->name('deposits');
 
     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');

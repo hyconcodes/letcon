@@ -102,7 +102,11 @@
                     <p class="text-sm opacity-75">Total Withdraw</p>
                     <p class="text-1xl font-bold">₦0.00</p>
                 </div>
-                <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button>
+                <div class="flex justify-between gap-2">
+                    <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button>
+                    <a href="{{ route('withdrawal') }}"
+                        class="rounded-lg bg-white/20 px-3 py-1 text-sm text-white hover:bg-white/30">Withdraw</a>
+                </div>
             </div>
 
             <!-- Pending Withdraw Card - Orange -->

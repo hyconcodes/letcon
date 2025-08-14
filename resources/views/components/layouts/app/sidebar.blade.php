@@ -54,6 +54,11 @@
                         wire:navigate>{{ __('Manage Agents') }}</flux:navlist.item>
                 @endcanany
 
+                @canany(['view.withdrawal', 'create.withdrawal', 'update.withdrawal', 'delete.withdrawal'])
+                    <flux:navlist.item icon="user" :href="route('admin.withdrawals')" :current="request()->routeIs('admin.withdrawals')"
+                        wire:navigate>{{ __('Manage Users Withdrawals') }}</flux:navlist.item>
+                @endcanany
+
                 @canany(['view.notification', 'create.notification', 'update.notification', 'delete.notification'])
                     <flux:navlist.item icon="bell" :href="route('notifications')" :current="request()->routeIs('notifications')"
                         wire:navigate>{{ __('Manage Notifications') }}</flux:navlist.item>
@@ -63,7 +68,7 @@
                 <flux:navlist.group heading="Transaction Logs" expandable>
                     <flux:navlist.item href="{{ route('earnings.log') }}">Earning History</flux:navlist.item>
                     <flux:navlist.item href="{{ route('deposits.log') }}">Deposit History</flux:navlist.item>
-                    <flux:navlist.item href="#">Withdrawal History</flux:navlist.item>
+                    <flux:navlist.item href="{{ route('withdrawal.log') }}">Withdrawal History</flux:navlist.item>
                 </flux:navlist.group>
                 @endrole()
 

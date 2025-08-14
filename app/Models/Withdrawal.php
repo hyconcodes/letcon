@@ -9,11 +9,10 @@ class Withdrawal extends Model
     protected $fillable = [
         'user_id',
         'amount',
-        'fee',
         'status',
-        'payment_method',
-        'payment_details',
-        'transaction_id',
+        'bank_name',
+        'bank_account_name',
+        'bank_account_number',
         'comment',
     ];
 
