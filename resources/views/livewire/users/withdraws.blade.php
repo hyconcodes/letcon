@@ -37,6 +37,9 @@ new class extends Component {
         $this->validate([
             'amount' => ['required', 'numeric', 'min:1000', 'max:'.$this->wallet->earned_balance],
             'pin' => 'required|numeric|digits:4',
+        ], [
+            'amount.min' => 'Withdrawal amount must be at least 1000 Naira.',
+            'amount.max' => 'Withdrawal amount cannot exceed your available balance.',
         ]);
 
         if ($this->pin != $this->user->pin) {

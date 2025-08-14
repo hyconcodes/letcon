@@ -15,6 +15,7 @@ new class extends Component {
     public function loadWithdrawals() {
         $query = \App\Models\Withdrawal::query()
             ->with('user')
+            ->where('user_id', auth()->id())
             ->where('status', $this->activeTab);
 
         if ($this->search) {
@@ -38,8 +39,8 @@ new class extends Component {
 <div>
     <main class="p-4">
         <div class="mb-6">
-            <h1 class="text-3xl font-bold text-secondary-900 dark:text-white">Withdrawal Logs</h1>
-            <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-400">View and manage withdrawal requests from users.</p>
+            <h1 class="text-3xl font-bold text-secondary-900 dark:text-white">My Withdrawal History</h1>
+            <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-400">View your withdrawal requests and their status.</p>
         </div>
 
         <div class="mb-6 bg-white dark:bg-zinc-800 rounded-xl shadow-sm">
@@ -82,7 +83,6 @@ new class extends Component {
                     <table class="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
                         <thead class="bg-zinc-50 dark:bg-zinc-800">
                             <tr>
-                                {{-- <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">User</th> --}}
                                 <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Amount</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Bank Details</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Status</th>
@@ -92,10 +92,6 @@ new class extends Component {
                         <tbody class="bg-white dark:bg-zinc-800 divide-y divide-secondary-200 dark:divide-secondary-700">
                             @foreach($withdrawals as $withdrawal)
                             <tr>
-                                {{-- <td class="px-6 py-4">
-                                    <div class="text-sm text-secondary-900 dark:text-white">{{ $withdrawal->user->name }}</div>
-                                    <div class="text-sm text-secondary-500 dark:text-secondary-400">ID: {{ $withdrawal->user_id }}</div>
-                                </td> --}}
                                 <td class="px-6 py-4">
                                     <div class="text-sm text-secondary-900 dark:text-white">₦{{ number_format($withdrawal->amount, 2) }}</div>
                                 </td>
