@@ -140,20 +140,22 @@
 
         @if($latestNotification)
         <div class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 bg-white p-4 dark:border-neutral-700 dark:bg-neutral-800">
-            <div class="flex items-start space-x-4 mb-6">
+            <div class="flex items-start space-x-4 mb-6 bg-gradient-to-r from-emerald-500 to-blue-500 p-6 rounded-lg">
                 <div class="flex-shrink-0">
-                    <img src="{{ asset('logo.png') }}" alt="App Logo" class="w-25 h-25">
+                    <svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
                 </div>
                 <div class="flex-1">
                     <div class="flex items-center justify-between">
-                        <h2 class="text-xl font-bold text-indigo-600">{{ $latestNotification->title ?? 'New Notification' }}</h2>
-                        <span class="px-2 py-1 text-xs rounded-full {{ $latestNotification->type === 'success' ? 'bg-green-100 text-green-800' : ($latestNotification->type === 'warning' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800') }}">
+                        <h2 class="text-xl font-bold text-white">{{ $latestNotification->title ?? 'New Notification' }}</h2>
+                        <span class="px-2 py-1 text-xs rounded-full bg-white/20 text-white">
                             {{ ucfirst($latestNotification->type ?? 'info') }}
                         </span>
                     </div>
-                    <p class="mt-2 text-gray-600 dark:text-gray-300">{{ $latestNotification->body }}</p>
+                    <p class="mt-2 text-white/90">{{ $latestNotification->body }}</p>
                     @if($latestNotification->link)
-                        <a href="{{ $latestNotification->link }}" class="inline-block mt-3 text-sm text-indigo-600 hover:text-indigo-500">
+                        <a href="{{ $latestNotification->link }}" class="inline-block mt-3 text-sm text-white hover:text-white/80">
                             Learn more →
                         </a>
                     @endif
