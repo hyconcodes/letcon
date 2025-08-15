@@ -97,25 +97,34 @@ class DatabaseSeeder extends Seeder
 
 
         // create a super admin user
-        User::create([
-            'name' => 'Super Admin',
-            'email' => 'superadmin@gmail.com',
-            'email_verified_at' => now(),
-            'password' => bcrypt('password'),
-            'username' => 'superadmin',
-        ]);
+        //     User::create([
+        //         'name' => 'Super Admin',
+        //         'email' => 'superadmin@gmail.com',
+        //         'email_verified_at' => now(),
+        //         'password' => bcrypt('password'),
+        //         'username' => 'superadmin',
+        //     ]);
 
-        // assign super admin role
-        $superAdmin = User::where('username', 'superadmin')->first();
-        $superAdmin->assignRole('super-admin');
+        //     // assign super admin role
+        //     $superAdmin = User::where('username', 'superadmin')->first();
+        //     $superAdmin->assignRole('super-admin');
 
-        // create username for all users that does not have username
+        //     // create username for all users that does not have username
 
-        $users = User::whereNull('username')->get();
+        //     $users = User::whereNull('username')->get();
 
+        //     foreach ($users as $user) {
+        //         $user->username = strtolower(str_replace(' ', '', $user->name));
+        //         $user->save();
+        //     }
+
+
+        // Delete all users with 'member' role
+        // Set referred_by to null for all users
+        User::query()->update(['referred_by' => null]);
+        $users = User::role('member')->get();
         foreach ($users as $user) {
-            $user->username = strtolower(str_replace(' ', '', $user->name));
-            $user->save();
+            $user->delete();
         }
     }
 }

@@ -23,7 +23,7 @@ new class extends Component {
             ->find(auth()->id());
 
         // For levels 1 and 2, show direct referrals
-        if ($level < 3) {
+        if ($level < 2) {
             $referrals = User::where('referred_by', auth()->id())
                 ->select('id', 'name', 'picture', 'email', 'phone', 'referred_by', 'level')
                 ->with(['referrer:id,name'])
@@ -40,6 +40,11 @@ new class extends Component {
                 ->where('id', '!=', auth()->id())
                 ->select('id', 'name', 'picture', 'email', 'phone', 'referred_by', 'level')
                 ->with(['referrer:id,name'])
+                ->whereIn('id', function($query) {
+                    $query->select('user_id')
+                        ->from('level_history')
+                        ->orderBy('upgraded_at', 'asc');
+                })
                 ->take(4)
                 ->get();
 

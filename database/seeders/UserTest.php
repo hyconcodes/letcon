@@ -2,29 +2,29 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Payment;
 use App\Models\Referral;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Seeder;
-
-class ProgressionTestSeeder extends Seeder
+class UserTest extends Seeder
 {
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(string $refcode = null): void
     {
-        // Create 10 users
-        for ($i = 0; $i < 286; $i++) {
+        // Create 8 users
+        for ($i = 0; $i < 8; $i++) {
             $userData = [
                 'name' => fake()->name(),
                 'email' => fake()->unique()->safeEmail(),
                 'username' => fake()->unique()->userName(),
                 'password' => Hash::make('password'),
-                'referral_code' => strtoupper(Str::random(8)),
+                'referral_code' => $refcode ?? strtoupper(Str::random(8)),
                 'email_verified_at' => now(),
                 'phone' => fake()->phoneNumber(),
             ];
