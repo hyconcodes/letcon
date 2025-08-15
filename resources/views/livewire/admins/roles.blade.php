@@ -198,12 +198,16 @@ new class extends Component {
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                <button wire:click="editRole({{ $role->id }})" class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 mr-3">
+                                <button wire:click="editRole({{ $role->id }})" class="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 mr-3"
+                                @can('update.roles')>
                                     Edit
                                 </button>
+                                @endcan
+                                @can('delete.roles')
                                 <button wire:click="confirmDelete({{ $role->id }})" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
                                     Delete
                                 </button>
+                                @endcan
                             </td>
                         </tr>
                         @endforeach

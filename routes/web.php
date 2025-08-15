@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
     ->middleware(['permission:view.notification|update.notification|create.notification|delete.notification'])
     ->name('notifications');
     Volt::route('admin/withdrawals-management', 'admins.withdrawals')
-    ->middleware(['permission:view.withdrawal|update.withdrawal|create.withdrawal|delete.withdrawal'])
+    ->middleware(['permission:view.withdrawal|pending.withdrawal|approve.withdrawal|reject.withdrawal|delete.withdrawal'])
     ->name('admin.withdrawals');
     
     // Member routes

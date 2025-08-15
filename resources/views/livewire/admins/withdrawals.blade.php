@@ -7,6 +7,8 @@ new class extends Component {
     public $activeTab = 'pending';
     public $notification = null;
     public $search = '';
+    public $selectedWithdrawal = null;
+    public $comment = '';
 
     public function mount() {
         $this->loadWithdrawals();
@@ -33,6 +35,52 @@ new class extends Component {
         $this->activeTab = $tab;
         $this->loadWithdrawals();
     }
+
+    public function openRejectModal($withdrawalId) {
+        $this->selectedWithdrawal = $withdrawalId;
+        $this->comment = '';
+    }
+
+    public function updateStatus($withdrawalId, $status, $requireComment = false) {
+        $withdrawal = \App\Models\Withdrawal::findOrFail($withdrawalId);
+        
+        if (!auth()->user()->can($status.'.withdrawal')) {
+            $this->notification = ['type' => 'error', 'message' => 'Unauthorized action'];
+            return;
+        }
+
+        if ($withdrawal->status === 'approved') {
+            $this->notification = ['type' => 'error', 'message' => 'Cannot modify approved withdrawals'];
+            return;
+        }
+
+        if ($requireComment && empty($this->comment)) {
+            $this->notification = ['type' => 'error', 'message' => 'Comment is required for rejection'];
+            return;
+        }
+
+        if ($status === 'approve') {
+            $user = $withdrawal->user;
+            if ($user->wallet->earned_balance >= $withdrawal->amount) {
+                $user->wallet->decrement('earned_balance', $withdrawal->amount);
+                $withdrawal->update(['status' => 'approved']);
+                $this->notification = ['type' => 'success', 'message' => 'Withdrawal approved successfully'];
+            } else {
+                $this->notification = ['type' => 'error', 'message' => 'Insufficient balance'];
+                return;
+            }
+        } else {
+            $withdrawal->update([
+                'status' => $status === 'approve' ? 'approved' : ($status === 'reject' ? 'rejected' : 'pending'),
+                'comment' => $requireComment ? $this->comment : $withdrawal->comment
+            ]);
+            $this->notification = ['type' => 'success', 'message' => 'Status updated successfully'];
+        }
+
+        $this->comment = '';
+        $this->selectedWithdrawal = null;
+        $this->loadWithdrawals();
+    }
 }; ?>
 
 <div>
@@ -41,6 +89,12 @@ new class extends Component {
             <h1 class="text-3xl font-bold text-secondary-900 dark:text-white">Withdrawal Logs</h1>
             <p class="mt-2 text-sm text-secondary-600 dark:text-secondary-400">View and manage withdrawal requests from users.</p>
         </div>
+
+        @if($notification)
+        <div class="mb-4 p-4 rounded-md {{ $notification['type'] === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
+            {{ $notification['message'] }}
+        </div>
+        @endif
 
         <div class="mb-6 bg-white dark:bg-zinc-800 rounded-xl shadow-sm">
             <div class="border-b border-secondary-200 dark:border-secondary-700">
@@ -87,6 +141,7 @@ new class extends Component {
                                 <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Bank Details</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Status</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Comment</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white dark:bg-zinc-800 divide-y divide-secondary-200 dark:divide-secondary-700">
@@ -118,6 +173,34 @@ new class extends Component {
                                         {{ $withdrawal->comment ?? 'No comment' }}
                                     </div>
                                 </td>
+                                <td class="px-6 py-4">
+                                    @if($withdrawal->status === 'pending')
+                                        @can('approve.withdrawal')
+                                        <button 
+                                            wire:click="updateStatus({{ $withdrawal->id }}, 'approve')"
+                                            class="text-sm bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600 mr-2"
+                                        >
+                                            Approve
+                                        </button>
+                                        @endcan
+                                        
+                                        @can('reject.withdrawal')
+                                        <button 
+                                            wire:click="openRejectModal({{ $withdrawal->id }})"
+                                            class="text-sm bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+                                        >
+                                            Reject
+                                        </button>
+                                        @endcan
+                                    @elseif($withdrawal->status === 'rejected')
+                                        <button 
+                                            wire:click="updateStatus({{ $withdrawal->id }}, 'pending')"
+                                            class="text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600"
+                                        >
+                                            Move to Pending
+                                        </button>
+                                    @endif
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -126,4 +209,33 @@ new class extends Component {
             </div>
         </div>
     </main>
+
+    @if($selectedWithdrawal)
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white dark:bg-zinc-800 p-6 rounded-lg w-96">
+            <h3 class="text-lg font-medium mb-4">Add Rejection Comment</h3>
+            <textarea 
+                wire:model="comment"
+                class="w-full p-2 border rounded-md mb-4 dark:bg-zinc-700 dark:border-zinc-600 dark:text-white"
+                rows="3"
+                placeholder="Enter rejection reason..."
+                required
+            ></textarea>
+            <div class="flex justify-end space-x-2">
+                <button 
+                    wire:click="$set('selectedWithdrawal', null)"
+                    class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+                >
+                    Cancel
+                </button>
+                <button 
+                    wire:click="updateStatus({{ $selectedWithdrawal }}, 'reject', true)"
+                    class="px-4 py-2 text-sm bg-red-500 text-white rounded-md hover:bg-red-600"
+                >
+                    Confirm Rejection
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>

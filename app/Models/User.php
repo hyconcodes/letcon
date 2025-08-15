@@ -27,6 +27,8 @@ class User extends Authenticatable // implements MustVerifyEmail
         'referral_code',
         'referred_by',
         'phone',
+        'level',
+        'upgraded_at',
         'picture',
         'country',
         'state',

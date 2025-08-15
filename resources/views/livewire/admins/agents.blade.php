@@ -10,6 +10,7 @@ new class extends Component {
     public $users;
     public $name = '';
     public $email = '';
+    public $username = '';
     public $password = '';
     public $phone = '';
     public $editingUser = null;
@@ -27,6 +28,7 @@ new class extends Component {
         try {
             $this->validate([
                 'name' => 'required|min:3',
+                'username' => 'required|min:3|unique:users,username',
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|min:8',
                 'phone' => 'nullable|string'
@@ -34,9 +36,11 @@ new class extends Component {
             
             $user = User::create([
                 'name' => $this->name,
+                'username' => $this->username,
                 'email' => $this->email,
                 'password' => bcrypt($this->password),
-                'phone' => $this->phone
+                'phone' => $this->phone,
+                'level' => 11
             ]);
 
             $user->assignRole('admin');
@@ -46,7 +50,7 @@ new class extends Component {
                 'message' => 'Agent created successfully!'
             ];
 
-            $this->reset(['name', 'email', 'password', 'phone']);
+            $this->reset(['name', 'username', 'email', 'password', 'phone']);
             $this->users = User::role('admin')->orderBy('created_at', 'desc')->get();
         } catch (\Exception $e) {
             $this->notification = [
@@ -59,6 +63,7 @@ new class extends Component {
     public function editAgent($userId) {
         $this->editingUser = User::findOrFail($userId);
         $this->name = $this->editingUser->name;
+        $this->username = $this->editingUser->username;
         $this->email = $this->editingUser->email;
         $this->phone = $this->editingUser->phone;
     }
@@ -67,6 +72,7 @@ new class extends Component {
         try {
             $this->validate([
                 'name' => 'required|min:3',
+                'username' => 'required|min:3|unique:users,username,' . $this->editingUser->id,
                 'email' => 'required|email|unique:users,email,' . $this->editingUser->id,
                 'phone' => 'nullable|string',
                 'password' => 'nullable|min:8'
@@ -74,6 +80,7 @@ new class extends Component {
 
             $data = [
                 'name' => $this->name,
+                'username' => $this->username,
                 'email' => $this->email,
                 'phone' => $this->phone,
             ];
@@ -89,7 +96,7 @@ new class extends Component {
                 'message' => 'Agent updated successfully!'
             ];
 
-            $this->reset(['editingUser', 'name', 'email', 'password', 'phone']);
+            $this->reset(['editingUser', 'name', 'username', 'email', 'password', 'phone']);
             $this->users = User::role('admin')->orderBy('created_at', 'desc')->get();
         } catch (\Exception $e) {
             $this->notification = [
@@ -179,6 +186,12 @@ new class extends Component {
             </div>
 
             <div>
+                <label class="block text-sm font-medium text-secondary-700 dark:text-secondary-300">Username</label>
+                <flux:input type="text" wire:model="username" class="mt-1 block w-full rounded-md border-secondary-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-800 dark:border-secondary-600 dark:text-white"/>
+                @error('username') <span class="text-secondary-500 text-sm">{{ $message }}</span> @enderror
+            </div>
+
+            <div>
                 <label class="block text-sm font-medium text-secondary-700 dark:text-secondary-300">Email</label>
                 <flux:input type="email" wire:model="email" class="mt-1 block w-full rounded-md border-secondary-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-800 dark:border-secondary-600 dark:text-white"/>
                 @error('email') <span class="text-secondary-500 text-sm">{{ $message }}</span> @enderror
@@ -234,6 +247,7 @@ new class extends Component {
                             </td>
                             <td class="px-6 py-4">
                                 <div class="text-sm text-secondary-900 dark:text-white font-medium">{{ $user->name }}</div>
+                                <div class="text-sm text-secondary-500 dark:text-secondary-400">{{ '@' . $user->username }}</div>
                                 <div class="text-sm text-secondary-500 dark:text-secondary-400">{{ $user->email }}</div>
                                 <div class="text-sm text-secondary-500 dark:text-secondary-400">{{ $user->phone }}</div>
                             </td>

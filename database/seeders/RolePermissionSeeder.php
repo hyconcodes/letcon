@@ -25,55 +25,55 @@ class RolePermissionSeeder extends Seeder
         //     Role::create(['name' => $role]);
         // }
 
-        $permissions = [
-            // 'view dashboard',
+        // $permissions = [
+        // 'view dashboard',
 
-            // 'create.member',
-            // 'view.member',
-            // 'update.member',
-            // 'delete.member',
+        // 'create.member',
+        // 'view.member',
+        // 'update.member',
+        // 'delete.member',
 
-            // 'create.admin',
-            // 'view.admin',
-            // 'update.admin',
-            // 'delete.admin',
+        // 'create.admin',
+        // 'view.admin',
+        // 'update.admin',
+        // 'delete.admin',
 
-            // 'create.roles',
-            // 'view.roles',
-            // 'update.roles',
-            // 'delete.roles',
+        // 'create.roles',
+        // 'view.roles',
+        // 'update.roles',
+        // 'delete.roles',
 
-            // 'view.wallet',
-            // 'fund.wallet',
-            // 'withdraw.wallet',
+        // 'view.wallet',
+        // 'fund.wallet',
+        // 'withdraw.wallet',
 
-            // 'view.board',
-            // 'view.tree',
+        // 'view.board',
+        // 'view.tree',
 
-            // 'view.payment',
-            // 'create.payment',
-            // 'update.payment',
-            // 'delete.payment',
+        // 'view.payment',
+        // 'create.payment',
+        // 'update.payment',
+        // 'delete.payment',
 
-            // 'view.agent',
-            // 'create.agent',
-            // 'update.agent',
-            // 'delete.agent',
+        // 'view.agent',
+        // 'create.agent',
+        // 'update.agent',
+        // 'delete.agent',
 
-            // 'view.notification',
-            // 'create.notification',
-            // 'update.notification',
-            // 'delete.notification',
+        // 'view.notification',
+        // 'create.notification',
+        // 'update.notification',
+        // 'delete.notification',
 
-            'view.withdrawal',
-            'create.withdrawal',
-            'update.withdrawal',
-            'delete.withdrawal',
-        ];
+        // 'view.withdrawal',
+        // 'create.withdrawal',
+        // 'update.withdrawal',
+        // 'delete.withdrawal',
+        // ];
 
-        foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
-        }
+        // foreach ($permissions as $permission) {
+        //     Permission::create(['name' => $permission]);
+        // }
         // $admin = Role::findByName('super-admin');
         // $admin->givePermissionTo($permissions);
 
@@ -88,5 +88,17 @@ class RolePermissionSeeder extends Seeder
 
         // $member = User::where('email', 'aladeyeluadesola6@gmail.com')->first();
         // $member->assignRole('super-admin');
+
+
+        // lets rename these permissions
+        //     'view.withdrawal',
+        //         'create.withdrawal',
+        //         'update.withdrawal',
+        //         'delete.withdrawal',
+
+        Permission::findByName('pend.withdrawal')->update(['name' => 'pending.withdrawal']);
+        // Permission::findByName('update.withdrawal')->update(['name' => 'approve.withdrawal']);
+        // Permission::findByName('delete.withdrawal')->update(['name' => 'delete.withdrawal']);
+        // Permission::create(['name' => 'reject.withdrawal']);
     }
 }

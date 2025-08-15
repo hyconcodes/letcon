@@ -54,7 +54,7 @@
                         wire:navigate>{{ __('Manage Agents') }}</flux:navlist.item>
                 @endcanany
 
-                @canany(['view.withdrawal', 'create.withdrawal', 'update.withdrawal', 'delete.withdrawal'])
+                @canany(['view.withdrawal', 'pending.withdrawal', 'approve.withdrawal', 'reject.withdrawal', 'delete.withdrawal'])
                     <flux:navlist.item icon="user" :href="route('admin.withdrawals')" :current="request()->routeIs('admin.withdrawals')"
                         wire:navigate>{{ __('Manage Users Withdrawals') }}</flux:navlist.item>
                 @endcanany
