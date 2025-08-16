@@ -31,8 +31,13 @@
 
                 @canany(['view.member', 'create.member', 'update.member', 'delete.member'])
                     <flux:navlist.item icon="users" :href="route('members')" :current="request()->routeIs('members')"
-                        wire:navigate>{{ __('Manage Members') }}</flux:navlist.item>
+                        wire:navigate>{{ __('Create Member') }}</flux:navlist.item>
                 @endcanany
+
+                @can(['view.member'])
+                    <flux:navlist.item icon="users" :href="route('users')" :current="request()->routeIs('users')"
+                        wire:navigate>{{ __('Manage Members') }}</flux:navlist.item>
+                @endcan
 
                 @canany(['view.wallet', 'fund.wallet', 'withdraw.wallet'])
                     <flux:navlist.item icon="wallet" :href="route('wallets')" :current="request()->routeIs('wallets')"

@@ -14,22 +14,36 @@ new class extends Component {
     {
         $this->user = auth()->user();
         $this->wallet = $this->user->wallet;
-        $this->canWithdraw = $this->user->level >= 2;
 
-        if (!$this->canWithdraw) {
+        // Check if user level is below 2
+        if ($this->user->level < 2) {
+            return redirect()->route('dashboard')->with('error', 'You must be level 2 or above to withdraw.');
+        }
+
+        // Check bank details
+        if (!$this->user->bank_name || !$this->user->bank_account_name || !$this->user->bank_account_number) {
             $this->notification = [
                 'type' => 'error',
-                'message' => 'Only Level 2 users and above can withdraw funds.',
+                'message' => 'Please complete your bank details before making a withdrawal.',
             ];
+            return;
         }
+
+        $this->canWithdraw = true;
     }
 
     public function withdraw()
     {
-        if (!$this->canWithdraw) {
+        // Check user level
+        if ($this->user->level < 2) {
+            return redirect()->route('dashboard')->with('error', 'You must be level 2 or above to withdraw.');
+        }
+
+        // Check bank details
+        if (!$this->user->bank_name || !$this->user->bank_account_name || !$this->user->bank_account_number) {
             $this->notification = [
                 'type' => 'error',
-                'message' => 'You are not authorized to make withdrawals. Please upgrade to Level 2 or higher.',
+                'message' => 'Please complete your bank details before making a withdrawal.',
             ];
             return;
         }
@@ -66,6 +80,12 @@ new class extends Component {
             'bank_account_name' => $this->user->bank_account_name,
             'bank_account_number' => $this->user->bank_account_number,
             'status' => 'pending'
+        ]);
+
+        // Update wallet balances
+        $this->wallet->update([
+            'earned_balance' => $this->wallet->earned_balance - $this->amount,
+            'pending_withdraw' => $this->wallet->pending_withdraw + $this->amount
         ]);
 
         $this->notification = [
@@ -180,10 +200,10 @@ new class extends Component {
                     </div>
                     <div class="ml-3">
                         <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-                            Access Restricted
+                            Bank Details Required
                         </h3>
                         <p class="mt-2 text-sm text-yellow-700 dark:text-yellow-300">
-                            You need to be at least Level 2 to make withdrawals. Please upgrade your account level to continue.
+                            Please complete your bank details before making a withdrawal.
                         </p>
                     </div>
                 </div>

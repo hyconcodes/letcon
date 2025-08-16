@@ -31,6 +31,10 @@ Route::middleware(['auth'])->group(function () {
     ->middleware(['permission:view.member|update.member|create.member|delete.member'])
     ->name('members');
 
+    Volt::route('admin/members-users-sys', 'admins.users')
+    ->middleware(['permission:view.member'])
+    ->name('users');
+
     Volt::route('admin/agent-management-sys', 'admins.agents')
     ->middleware(['permission:view.agent|update.agent|create.agent|delete.agent'])
     ->name('agents');
@@ -42,6 +46,7 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('admin/notification-sys', 'admins.notifications')
     ->middleware(['permission:view.notification|update.notification|create.notification|delete.notification'])
     ->name('notifications');
+
     Volt::route('admin/withdrawals-management', 'admins.withdrawals')
     ->middleware(['permission:view.withdrawal|pending.withdrawal|approve.withdrawal|reject.withdrawal|delete.withdrawal'])
     ->name('admin.withdrawals');

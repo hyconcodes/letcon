@@ -61,12 +61,13 @@ new class extends Component {
 
         if ($status === 'approve') {
             $user = $withdrawal->user;
-            if ($user->wallet->earned_balance >= $withdrawal->amount) {
-                $user->wallet->decrement('earned_balance', $withdrawal->amount);
+            if ($user->wallet->pending_withdraw >= $withdrawal->amount) {
+                $user->wallet->decrement('pending_withdraw', $withdrawal->amount);
+                $user->wallet->increment('total_withdraw', $withdrawal->amount);
                 $withdrawal->update(['status' => 'approved']);
                 $this->notification = ['type' => 'success', 'message' => 'Withdrawal approved successfully'];
             } else {
-                $this->notification = ['type' => 'error', 'message' => 'Insufficient balance'];
+                $this->notification = ['type' => 'error', 'message' => 'Insufficient pending withdrawal balance'];
                 return;
             }
         } else {

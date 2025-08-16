@@ -276,7 +276,9 @@ new class extends Component {
             <div class="mt-10 pt-10 border-t">
                 <h3 class="text-lg font-medium">{{ __('Bank Information') }}</h3>
                 <p class="text-sm text-red-600 mb-4">
-                    {{ __('Warning: Bank information can only be set once. Contact admin support for any changes after initial setup.') }}
+                    {{ __('Warning: Bank information can only be set once. Contact ') }}
+                    <a href="mailto:support@letcon.com.ng" class="text-blue-600 hover:text-blue-800 underline">support@letcon.com.ng</a>
+                    {{ __(' for any changes after initial setup.') }}
                 </p>
 
                 <form wire:submit="updateBankInformation" class="space-y-6">

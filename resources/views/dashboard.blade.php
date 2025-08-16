@@ -100,10 +100,11 @@
                 </svg>
                 <div class="mb-4">
                     <p class="text-sm opacity-75">Total Withdraw</p>
-                    <p class="text-1xl font-bold">₦0.00</p>
+                    <p class="text-1xl font-bold">₦{{ number_format(Auth::user()->wallet()->sum('total_withdraw') ?? 0, 2) }}</p>
                 </div>
                 <div class="flex justify-between gap-2">
-                    <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button>
+                    <a href="{{ route('withdrawal.log') }}"
+                        class="rounded-lg bg-white/20 px-3 py-1 text-sm text-white hover:bg-white/30">View</a>
                     <a href="{{ route('withdrawal') }}"
                         class="rounded-lg bg-white/20 px-3 py-1 text-sm text-white hover:bg-white/30">Withdraw</a>
                 </div>
@@ -118,9 +119,10 @@
                 </svg>
                 <div class="mb-4">
                     <p class="text-sm opacity-75">Pending Withdraw</p>
-                    <p class="text-1xl font-bold">₦0.00</p>
+                    <p class="text-1xl font-bold">₦{{ number_format(Auth::user()->wallet()->sum('pending_withdraw') ?? 0, 2) }}</p>
                 </div>
-                <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button>
+                <a href="{{ route('withdrawal.log') }}"
+                    class="rounded-lg bg-white/20 px-3 py-1 text-sm text-white hover:bg-white/30">View</a>
             </div>
 
             <!-- Reject Withdraw Card - Red -->
@@ -134,7 +136,7 @@
                     <p class="text-sm opacity-75">Reject Withdraw</p>
                     <p class="text-1xl font-bold">₦0.00</p>
                 </div>
-                <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button>
+                {{-- <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button> --}}
             </div>
         </div>
 

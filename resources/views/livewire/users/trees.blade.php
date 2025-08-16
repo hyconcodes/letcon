@@ -22,34 +22,29 @@ new class extends Component {
             ->select('id', 'name', 'picture', 'email', 'phone', 'referred_by', 'level')
             ->find(auth()->id());
 
-        // For levels 1 and 2, show direct referrals
-        if ($level < 2) {
+        // For level 1, show only direct referrals
+        if ($level == 1) {
             $referrals = User::where('referred_by', auth()->id())
-                ->select('id', 'name', 'picture', 'email', 'phone', 'referred_by', 'level')
+                ->select('users.id', 'name', 'picture', 'email', 'phone', 'referred_by', 'level')
                 ->with(['referrer:id,name'])
                 ->take(4)
                 ->get();
-
-            $this->emptySlots = 4 - $referrals->count();
         }
-        // For levels 3-9, show users who just entered the current level except current user
+        // For levels 2-9, show direct referrals ordered by their entry time into the level
         else {
-            $referrals = User::whereIn('id', function ($query) use ($level) {
-                $query->select('user_id')->from('level_history')->where('to_level', $level)->orderBy('upgraded_at', 'desc');
-            })
-                ->where('id', '!=', auth()->id())
-                ->select('id', 'name', 'picture', 'email', 'phone', 'referred_by', 'level')
-                ->with(['referrer:id,name'])
-                ->whereIn('id', function($query) {
-                    $query->select('user_id')
-                        ->from('level_history')
-                        ->orderBy('upgraded_at', 'asc');
+            $referrals = User::join('level_history', function($join) use ($level) {
+                    $join->on('users.id', '=', 'level_history.user_id')
+                         ->where('level_history.to_level', '=', $level);
                 })
+                ->where('users.referred_by', auth()->id())
+                ->select('users.id', 'users.name', 'users.picture', 'users.email', 'users.phone', 'users.referred_by', 'users.level', 'level_history.upgraded_at')
+                ->with(['referrer:id,name'])
+                ->orderBy('level_history.upgraded_at', 'asc')
                 ->take(4)
                 ->get();
-
-            $this->emptySlots = 4 - $referrals->count();
         }
+
+        $this->emptySlots = 4 - $referrals->count();
 
         $this->treeData[] = [
             'parent' => auth()->id(),
