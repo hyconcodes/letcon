@@ -10,12 +10,18 @@
     <!-- Favicon -->
     <style>
         :root {
-            --primary-color: #2ecc71; /* Emerald Green */
-            --secondary-color: #27ae60; /* Darker Emerald Green */
-            --text-color: #333333; /* Dark Gray */
-            --light-bg: #f0fdf4; /* Light Green Background */
-            --border-color: #cccccc; /* Light Gray */
-            --accent-color: #3498db; /* Complementary Blue */
+            --primary-color: #2ecc71;
+            /* Emerald Green */
+            --secondary-color: #27ae60;
+            /* Darker Emerald Green */
+            --text-color: #333333;
+            /* Dark Gray */
+            --light-bg: #f0fdf4;
+            /* Light Green Background */
+            --border-color: #cccccc;
+            /* Light Gray */
+            --accent-color: #3498db;
+            /* Complementary Blue */
         }
 
         * {
@@ -68,17 +74,17 @@
             font-size: 14px;
             text-transform: uppercase;
         }
-        
+
         @media (max-width: 768px) {
             .header-container {
                 padding: 10px 0;
             }
-            
+
             .logo {
                 font-size: 20px;
             }
         }
-        
+
         .hamburger {
             display: none;
             flex-direction: column;
@@ -88,7 +94,7 @@
             cursor: pointer;
             z-index: 10;
         }
-        
+
         .hamburger span {
             display: block;
             height: 3px;
@@ -97,15 +103,15 @@
             border-radius: 3px;
             transition: all 0.3s ease;
         }
-        
+
         .hamburger.active span:nth-child(1) {
             transform: translateY(9px) rotate(45deg);
         }
-        
+
         .hamburger.active span:nth-child(2) {
             opacity: 0;
         }
-        
+
         .hamburger.active span:nth-child(3) {
             transform: translateY(-9px) rotate(-45deg);
         }
@@ -504,12 +510,18 @@
     <!-- Additional Styles -->
     <style>
         :root {
-            --primary-color: #2ecc71; /* Emerald Green */
-            --secondary-color: #27ae60; /* Darker Emerald Green */
-            --text-color: #333333; /* Dark Gray */
-            --light-bg: #f0fdf4; /* Light Green Background */
-            --border-color: #cccccc; /* Light Gray */
-            --accent-color: #3498db; /* Complementary Blue */
+            --primary-color: #2ecc71;
+            /* Emerald Green */
+            --secondary-color: #27ae60;
+            /* Darker Emerald Green */
+            --text-color: #333333;
+            /* Dark Gray */
+            --light-bg: #f0fdf4;
+            /* Light Green Background */
+            --border-color: #cccccc;
+            /* Light Gray */
+            --accent-color: #3498db;
+            /* Complementary Blue */
         }
 
         * {
@@ -574,17 +586,26 @@
     <!-- Styles -->
     <style>
         :root {
-            --primary-color: #2ecc71; /* Emerald Green */
-            --secondary-color: #27ae60; /* Darker Emerald Green */
-            --accent-color: #3498db; /* Complementary Blue */
-            --text-color: #333333; /* Dark Gray */
+            --primary-color: #2ecc71;
+            /* Emerald Green */
+            --secondary-color: #27ae60;
+            /* Darker Emerald Green */
+            --accent-color: #3498db;
+            /* Complementary Blue */
+            --text-color: #333333;
+            /* Dark Gray */
             --light-text: #666;
             --background-color: #fff;
-            --light-background: #f0fdf4; /* Light Green Background */
-            --border-color: #cccccc; /* Light Gray */
-            --success-color: #2ecc71; /* Emerald Green */
-            --warning-color: #f1c40f; /* Yellow */
-            --error-color: #e74c3c; /* Red */
+            --light-background: #f0fdf4;
+            /* Light Green Background */
+            --border-color: #cccccc;
+            /* Light Gray */
+            --success-color: #2ecc71;
+            /* Emerald Green */
+            --warning-color: #f1c40f;
+            /* Yellow */
+            --error-color: #e74c3c;
+            /* Red */
             --border-radius: 4px;
             --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
@@ -1015,11 +1036,11 @@
             .footer-grid {
                 grid-template-columns: 1fr 1fr;
             }
-            
+
             .hamburger {
                 display: flex;
             }
-            
+
             .nav-links {
                 position: fixed;
                 top: 0;
@@ -1036,31 +1057,31 @@
                 padding: 50px 0;
                 box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
             }
-            
+
             .nav-links.active {
                 right: 0;
             }
-            
+
             .nav-links a {
                 font-size: 16px;
             }
-            
+
             .update-card {
                 flex-direction: column;
                 text-align: center;
             }
-            
+
             .update-image {
                 width: 100%;
                 max-width: 300px;
                 margin: 0 auto 20px;
             }
-            
+
             .intro-image {
                 max-width: 300px;
                 margin: 0 auto;
             }
-            
+
             .article-card {
                 max-width: 500px;
                 margin: 0 auto 30px;
@@ -1071,77 +1092,77 @@
             .footer-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .hero h1 {
                 font-size: 28px;
             }
-            
+
             .hero p {
                 font-size: 16px;
             }
-            
+
             .intro-heading {
                 font-size: 24px;
             }
-            
+
             .stats-heading {
                 font-size: 24px;
             }
-            
+
             .stat-card {
                 padding: 20px;
             }
-            
+
             .stat-number {
                 font-size: 28px;
             }
-            
+
             .testimonial-quote {
                 font-size: 16px;
             }
-            
+
             .testimonial-image {
                 width: 150px;
                 height: 150px;
             }
-            
+
             .nav-links {
                 width: 85%;
             }
-            
+
             .hero {
                 padding: 60px 0;
             }
-            
+
             .btn-primary {
                 padding: 8px 20px;
                 font-size: 14px;
             }
-            
+
             .intro-section,
             .stats-section,
             .testimonial-section,
             .updates-section {
                 padding: 40px 0;
             }
-            
+
             .cta-section {
                 padding: 30px 0;
             }
-            
+
             .cta-heading {
                 font-size: 20px;
             }
-            
+
             .newsletter-form {
                 flex-direction: column;
             }
-            
+
             .newsletter-input {
                 border-radius: 4px;
                 margin-bottom: 10px;
             }
-            
+
             .newsletter-button {
                 border-radius: 4px;
                 width: 100%;
@@ -1169,7 +1190,7 @@
                 <a href="{{ route('login') }}">Login</a>
                 <a href="{{ route('register') }}">Register</a>
                 @auth
-                    @if(auth()->user()->hasRole('super-admin'))
+                    @if (auth()->user()->hasRole('super-admin'))
                         <a href="{{ route('admin.dashboard') }}" style="color: var(--primary-color);">Admin Dashboard</a>
                     @else
                         <a href="{{ route('dashboard') }}" style="color: var(--primary-color);">My Dashboard</a>
@@ -1298,7 +1319,8 @@
                 </div> --}}
                 <div class="article-content">
                     <h4 class="article-title">Letcon Platform Launch</h4>
-                    <p class="article-text">We're excited to announce the official launch of the Letcon Global platform,
+                    <p class="article-text">We're excited to announce the official launch of the Letcon Global
+                        platform,
                         designed to empower individuals through structured financial collaboration and peer support
                         systems.</p>
                     <a href="#" class="article-link">READ MORE</a>
@@ -1373,16 +1395,16 @@
 
             // Change image every 5 seconds
             setInterval(showNextImage, 5000);
-            
+
             // Mobile menu functionality
             const hamburger = document.querySelector('.hamburger');
             const navLinks = document.querySelector('.nav-links');
-            
+
             hamburger.addEventListener('click', function() {
                 hamburger.classList.toggle('active');
                 navLinks.classList.toggle('active');
             });
-            
+
             // Close mobile menu when a link is clicked
             const navLinksItems = document.querySelectorAll('.nav-links a');
             navLinksItems.forEach(link => {

@@ -13,8 +13,8 @@ use Illuminate\Support\Facades\Log;
 
 class Ref extends Command
 {
-    protected $signature = 'ref';
-    protected $description = 'Check referral payments and upgrade users automatically using strict GP pyramid rules';
+    protected $signature = 'pro';
+    protected $description = 'Check referral payments and upgrade users automatically using GP rules';
 
     public function handle()
     {
@@ -53,7 +53,7 @@ class Ref extends Command
         }
 
         if ($currentLevel == 1) {
-            // STRICT rule: must have 4 direct referrals who paid ₦20,000
+            // STRICT: must have 4 direct referrals who paid ₦20,000
             $count = $this->countPaidReferrals($user->id);
             if ($count >= 4) {
                 $this->upgradeUser($user, $upgradedUsers);
@@ -61,9 +61,9 @@ class Ref extends Command
             return;
         }
 
-        // For Level 2 and above, check full pyramid structure
-        $depth = $currentLevel;
-        if ($this->hasFullGPPyramid($user->id, $depth)) {
+        // From Level 2 upward: must have at least 4 users in downline at same level
+        $downlineAtSameLevel = $this->countDownlineAtLevel($user->id, $currentLevel);
+        if ($downlineAtSameLevel >= 4) {
             $this->upgradeUser($user, $upgradedUsers);
         }
     }
@@ -77,32 +77,35 @@ class Ref extends Command
             ->count();
     }
 
-    /**
-     * Strict GP check: every level in the tree must be fully filled
-     */
-    private function hasFullGPPyramid($userId, $depth)
+    private function countDownlineAtLevel($userId, $level)
     {
-        $currentLevelUsers = [$userId];
+        $checked = [];
+        $queue = [$userId];
+        $total = 0;
 
-        for ($i = 0; $i < $depth; $i++) {
-            $nextLevelUsers = Referral::whereIn('referrer_id', $currentLevelUsers)
-                ->whereHas('referredUser.payments', function ($p) {
-                    $p->where('status', 'paid')->where('amount', 20000);
-                })
+        while (!empty($queue)) {
+            $currentIds = $queue;
+            $queue = [];
+
+            $nextLevelUsers = Referral::whereIn('referrer_id', $currentIds)
                 ->pluck('referred_id')
                 ->toArray();
 
-            // Expected number at this depth
-            $expectedAtThisDepth = pow(4, $i + 1);
+            foreach ($nextLevelUsers as $id) {
+                if (!in_array($id, $checked)) {
+                    $checked[] = $id;
 
-            if (count($nextLevelUsers) < $expectedAtThisDepth) {
-                return false; // Missing members in this depth
+                    $downlineUser = User::find($id);
+                    if ($downlineUser && $downlineUser->level == $level) {
+                        $total++;
+                    }
+
+                    $queue[] = $id; // keep exploring deeper levels
+                }
             }
-
-            $currentLevelUsers = $nextLevelUsers;
         }
 
-        return true; // All depths are complete
+        return $total;
     }
 
     private function upgradeUser(User $user, &$upgradedUsers)

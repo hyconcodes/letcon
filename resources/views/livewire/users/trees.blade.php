@@ -30,13 +30,13 @@ new class extends Component {
                 ->take(4)
                 ->get();
         }
-        // For levels 2-9, show direct referrals ordered by their entry time into the level
         else {
-            $referrals = User::join('level_history', function($join) use ($level) {
-                    $join->on('users.id', '=', 'level_history.user_id')
-                         ->where('level_history.to_level', '=', $level);
+            $referrals = User::join('level_supporters', 'users.id', '=', 'level_supporters.supporter_id')
+                ->join('level_history', function ($join) use ($level) {
+                    $join->on('level_supporters.user_id', '=', 'level_history.user_id')->where('level_history.to_level', '=', $level);
                 })
-                ->where('users.referred_by', auth()->id())
+                ->where('level_supporters.user_id', auth()->id()) // only my supporters
+                ->where('level_supporters.level', $level) // they helped me move into this level
                 ->select('users.id', 'users.name', 'users.picture', 'users.email', 'users.phone', 'users.referred_by', 'users.level', 'level_history.upgraded_at')
                 ->with(['referrer:id,name'])
                 ->orderBy('level_history.upgraded_at', 'asc')

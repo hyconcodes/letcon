@@ -3,18 +3,20 @@
 namespace App\Console\Commands;
 
 use App\Models\LevelHistory;
+use App\Models\LevelUpTrigger;
 use App\Models\Referral;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Earning;
+use App\Models\Payment;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class Ref extends Command
+class LevelUp extends Command
 {
-    protected $signature = 'ref';
-    protected $description = 'Check referral payments and upgrade users automatically using strict GP pyramid rules';
+    protected $signature = 'upgrade';
+    protected $description = 'Check referral payments and upgrade users automatically using GP rules';
 
     public function handle()
     {
@@ -48,63 +50,67 @@ class Ref extends Command
     private function processUser(User $user, &$upgradedUsers)
     {
         $currentLevel = $user->level;
+
+        // Already max level?
         if ($currentLevel >= 10) {
             return;
         }
 
         if ($currentLevel == 1) {
-            // STRICT rule: must have 4 direct referrals who paid ₦20,000
-            $count = $this->countPaidReferrals($user->id);
-            if ($count >= 4) {
-                $this->upgradeUser($user, $upgradedUsers);
-            }
-            return;
-        }
-
-        // For Level 2 and above, check full pyramid structure
-        $depth = $currentLevel;
-        if ($this->hasFullGPPyramid($user->id, $depth)) {
-            $this->upgradeUser($user, $upgradedUsers);
+            $this->processLevelOneUpgrade($user, $upgradedUsers);
+        } else {
+            $this->processHigherLevelUpgrade($user, $upgradedUsers);
         }
     }
 
-    private function countPaidReferrals($userId)
+    /**
+     * Handle Level 1 → 2 upgrade
+     */
+    private function processLevelOneUpgrade(User $user, &$upgradedUsers)
     {
-        return Referral::where('referrer_id', $userId)
+        $count = Referral::where('referrer_id', $user->id)
             ->whereHas('referredUser.payments', function ($p) {
                 $p->where('status', 'paid')->where('amount', 20000);
             })
             ->count();
+
+        if ($count >= 4) {
+            $this->upgradeUser($user, $upgradedUsers);
+        }
     }
 
     /**
-     * Strict GP check: every level in the tree must be fully filled
+     * Handle Level 2+ upgrades using LevelUpTrigger
      */
-    private function hasFullGPPyramid($userId, $depth)
+    private function processHigherLevelUpgrade(User $user, &$upgradedUsers)
     {
-        $currentLevelUsers = [$userId];
+        $currentLevel = $user->level;
 
-        for ($i = 0; $i < $depth; $i++) {
-            $nextLevelUsers = Referral::whereIn('referrer_id', $currentLevelUsers)
-                ->whereHas('referredUser.payments', function ($p) {
-                    $p->where('status', 'paid')->where('amount', 20000);
-                })
-                ->pluck('referred_id')
-                ->toArray();
+        // Find 4 users who recently reached this level but not yet used as triggers
+        $triggerUsers = User::where('level', $currentLevel)
+            ->where('id', '!=', $user->id)
+            ->whereNotIn('id', LevelUpTrigger::where('user_id', $user->id)
+                ->where('level', $currentLevel)->pluck('triggered_by'))
+            ->take(4)
+            ->get();
 
-            // Expected number at this depth
-            $expectedAtThisDepth = pow(4, $i + 1);
-
-            if (count($nextLevelUsers) < $expectedAtThisDepth) {
-                return false; // Missing members in this depth
+        if ($triggerUsers->count() == 4) {
+            // Save triggers
+            foreach ($triggerUsers as $triggerUser) {
+                LevelUpTrigger::create([
+                    'user_id'      => $user->id,
+                    'triggered_by' => $triggerUser->id,
+                    'level'        => $currentLevel,
+                ]);
             }
 
-            $currentLevelUsers = $nextLevelUsers;
+            $this->upgradeUser($user, $upgradedUsers);
         }
-
-        return true; // All depths are complete
     }
 
+    /**
+     * Upgrade a user, add wallet earnings, save history
+     */
     private function upgradeUser(User $user, &$upgradedUsers)
     {
         $currentLevel = $user->level;
@@ -119,7 +125,7 @@ class Ref extends Command
             6 => 1024000,
             7 => 2048000,
             8 => 4096000,
-            9 => 20000000
+            9 => 20000000,
         ];
 
         $earnings = $earningsPerLevel[$currentLevel] ?? 0;
@@ -127,43 +133,45 @@ class Ref extends Command
         try {
             DB::beginTransaction();
 
-            // Update wallet balance
+            // Update wallet
             $wallet = Wallet::firstOrCreate(['user_id' => $user->id]);
             $wallet->earned_balance += $earnings;
             $wallet->save();
 
-            // Update user level
-            $user->level = $nextLevel;
-            $user->save();
+            // Upgrade user
+            $user->update([
+                'level' => $nextLevel,
+                'upgraded_at' => now(),
+            ]);
 
-            // Record in level history
+            // Record level history
             LevelHistory::create([
                 'user_id' => $user->id,
                 'from_level' => $currentLevel,
                 'to_level' => $nextLevel,
-                'upgraded_at' => now()
+                'upgraded_at' => now(),
             ]);
 
-            // Record the earning transaction
+            // Record earning
             Earning::create([
                 'user_id' => $user->id,
                 'amount' => $earnings,
                 'type' => 'level_upgrade',
                 'description' => "Level upgrade earnings from Level {$currentLevel} to Level {$nextLevel}",
-                'earned_at' => now()
+                'earned_at' => now(),
             ]);
 
             DB::commit();
 
-            $message = "User {$user->name} (ID {$user->id}) upgraded from Level {$currentLevel} to Level {$nextLevel}, earned ₦{$earnings}";
-            $this->info($message);
+            $message = "User {$user->name} (ID {$user->id}) upgraded from Level {$currentLevel} → {$nextLevel}, earned ₦{$earnings}";
             Log::info($message);
+            $this->info($message);
 
             $upgradedUsers[] = [
                 'name' => $user->name,
                 'id' => $user->id,
                 'new_level' => $nextLevel,
-                'earnings' => $earnings
+                'earnings' => $earnings,
             ];
         } catch (\Exception $e) {
             DB::rollBack();

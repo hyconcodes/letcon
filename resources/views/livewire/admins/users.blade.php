@@ -110,6 +110,7 @@ new class extends Component {
                                 </td>
                                 <td class="px-3 sm:px-6 py-2 sm:py-4">
                                     <div class="text-xs sm:text-sm text-secondary-900 dark:text-white font-medium">{{ $user->name }}</div>
+                                    <div class="text-xs sm:text-sm text-secondary-900 dark:text-white font-medium">{{ $user->username ?? "nil" }}</div>
                                     <div class="text-xs sm:text-sm text-secondary-500 dark:text-secondary-400">{{ $user->email }}</div>
                                     <div class="text-xs sm:text-sm text-secondary-500 dark:text-secondary-400">{{ $user->phone }}</div>
                                 </td>
