@@ -18,15 +18,15 @@ class RefSeeder extends Seeder
     public function run(): void
     {
         // Get the user with the given referral code
-        $referrer = User::where('referral_code', 'ZMXMMJLY')->first();
+        $referrer = User::where('referral_code', 'TJMRVWDM')->first();
 
         if (!$referrer) {
-            $this->command->error("No user found with referral code: ZMXMMJLY");
+            $this->command->error("No user found with referral code: TJMRVWDM");
             return;
         }
 
         // Create 4 users under this referrer
-        for ($i = 0; $i < 4; $i++) {
+        for ($i = 0; $i < 2; $i++) {
             $userData = [
                 'name' => fake()->name(),
                 'email' => fake()->unique()->safeEmail(),

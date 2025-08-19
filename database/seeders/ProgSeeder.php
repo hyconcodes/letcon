@@ -17,7 +17,7 @@ class ProgSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 0; $i < 16; $i++) {
+        for ($i = 0; $i < 84; $i++) {
             $userData = [
                 'name' => fake()->name(),
                 'email' => fake()->unique()->safeEmail(),

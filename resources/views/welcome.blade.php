@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Letcon Global - Financial Empowerment Platform</title>
+    <title>Letcon Global - Digitalize Contribution and Financial Empowerment Platform</title>
 
     <!-- Favicon -->
     <style>
@@ -1219,7 +1219,7 @@
     <section class="intro-section">
         <div class="container">
             <h2 class="intro-title">This is Letcon Global!</h2>
-            <h3 class="intro-heading">Financial Empowerment Platform</h3>
+            <h3 class="intro-heading">Digitalize Contribution and Financial Empowerment Platform</h3>
             <div class="intro-content">
                 <div class="intro-text">
                     <p>Letcon Global Company Limited (Letcon) is a forward-thinking financial empowerment and networking
