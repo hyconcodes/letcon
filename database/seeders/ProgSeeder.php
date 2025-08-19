@@ -10,15 +10,14 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 
-class ProgressionTestSeeder extends Seeder
+class ProgSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        // Create 10 users
-        for ($i = 0; $i < 8; $i++) {
+        for ($i = 0; $i < 16; $i++) {
             $userData = [
                 'name' => fake()->name(),
                 'email' => fake()->unique()->safeEmail(),

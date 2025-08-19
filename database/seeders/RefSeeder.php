@@ -10,7 +10,7 @@ use App\Models\Referral;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class ReferralSeeder extends Seeder
+class RefSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -18,10 +18,10 @@ class ReferralSeeder extends Seeder
     public function run(): void
     {
         // Get the user with the given referral code
-        $referrer = User::where('referral_code', 'W6NMB6FG')->first();
+        $referrer = User::where('referral_code', 'ZMXMMJLY')->first();
 
         if (!$referrer) {
-            $this->command->error("No user found with referral code: W6NMB6FG");
+            $this->command->error("No user found with referral code: ZMXMMJLY");
             return;
         }
 
