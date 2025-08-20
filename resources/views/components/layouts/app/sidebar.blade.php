@@ -31,7 +31,7 @@
 
                 @canany(['view.member', 'create.member', 'update.member', 'delete.member'])
                     <flux:navlist.item icon="users" :href="route('members')" :current="request()->routeIs('members')"
-                        wire:navigate>{{ __('Create Member') }}</flux:navlist.item>
+                        wire:navigate class="hidden">{{ __('Create Member') }}</flux:navlist.item>
                 @endcanany
 
                 @can(['view.member'])
