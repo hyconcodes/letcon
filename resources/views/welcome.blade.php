@@ -66,6 +66,7 @@
                     <span class="text-2xl font-bold text-letcon-neutral-900">Letcon</span>
                 </div>
 
+                <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="#about"
                         class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">About</a>
@@ -73,13 +74,17 @@
                         class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">How It Works</a>
                     <a href="#benefits"
                         class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">Benefits</a>
-                    {{-- <a href="#testimonials"
-                        class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">Testimonials</a> --}}
                 </div>
 
-                <div class="flex items-center space-x-4">
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-letcon-neutral-900 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+
+                <div class="hidden md:flex items-center space-x-4">
                     @guest
-                        {{-- <button class="btn-hero">Join Now</button> --}}
                         <a href="{{ route('register') }}" class="btn-hero">Register</a>
                         <a href="{{ route('login') }}" class="btn-hero">Login</a>
                     @endguest
@@ -92,8 +97,68 @@
                     @endauth
                 </div>
             </nav>
+
+            <!-- Mobile Menu Sidebar -->
+            <div id="mobile-menu" class="fixed inset-y-0 left-0 transform -translate-x-full transition duration-300 ease-in-out w-full bg-green-50 shadow-lg z-50 md:hidden">
+                <div class="p-6 space-y-6 bg-green-50">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 gradient-hero rounded-lg flex items-center justify-center">
+                                <span class="text-white font-bold text-lg"><img src="{{ asset('logo.png') }}" alt=""></span>
+                            </div>
+                            <span class="text-xl font-bold text-letcon-neutral-900">Letcon</span>
+                        </div>
+                        <button id="close-mobile-menu" class="text-letcon-neutral-900">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col space-y-4">
+                        <a href="#about" class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">About</a>
+                        <a href="#how-it-works" class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">How It Works</a>
+                        <a href="#benefits" class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">Benefits</a>
+                    </div>
+
+                    <div class="flex flex-col space-y-4 pt-6 border-t">
+                        @guest
+                            <a href="{{ route('register') }}" class="btn-hero text-center">Register</a>
+                            <a href="{{ route('login') }}" class="btn-hero text-center">Login</a>
+                        @endguest
+                        @auth
+                            @if (auth()->user()->hasRole('super-admin'))
+                                <a href="{{ route('admin.dashboard') }}" class="btn-hero text-center">Admin Dashboard</a>
+                            @else
+                                <a href="{{ route('dashboard') }}" class="btn-hero text-center">My Dashboard</a>
+                            @endif
+                        @endauth
+                    </div>
+                </div>
+            </div>
         </div>
     </header>
+
+    <script>
+        // Mobile menu functionality
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const closeMobileMenu = document.getElementById('close-mobile-menu');
+
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('-translate-x-full');
+        }
+
+        mobileMenuButton.addEventListener('click', toggleMobileMenu);
+        closeMobileMenu.addEventListener('click', toggleMobileMenu);
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+                mobileMenu.classList.add('-translate-x-full');
+            }
+        });
+    </script>
 
     <!-- Hero Section -->
     <section class="relative min-h-screen flex items-center py-20 overflow-hidden">
@@ -638,7 +703,7 @@
 
                 <div class="grid grid-cols-2 gap-6">
                     <div class="space-y-6">
-                        <img src="src/assets/community-icon.jpg"
+                        <img src="{{ asset('assets/letcon-community-icon-Bwn6nnFj.jpg') }}"
                             alt="Community growth and networking - interconnected people building wealth together"
                             class="w-full h-48 object-cover rounded-2xl shadow-elevation-2" />
                         <div class="text-center p-6 gradient-subtle rounded-xl">
@@ -1207,11 +1272,8 @@
                             <span>+234 907 2236 347</span>
                         </div> --}}
                         <div class="flex items-center space-x-3 text-letcon-neutral-200">
-                            <svg class="w-5 h-5 text-letcon-primary-light" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
-                                </path>
+                            <svg class="w-5 h-5 text-letcon-primary-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                             </svg>
                             <span><a href="https://wa.me/2347032468725">Chat our support team</a></span>
                         </div>
@@ -1267,7 +1329,7 @@
                         <li><a href="#how-it-works"
                                 class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">How
                                 It Works</a></li>
-                        <li><a href="#pricing"
+                        {{-- <li><a href="#pricing"
                                 class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Pricing</a>
                         </li>
                         <li><a href="#testimonials"
@@ -1275,7 +1337,7 @@
                                 Stories</a></li>
                         <li><a href="#community"
                                 class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Community</a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
 
@@ -1288,12 +1350,12 @@
                         <li><a href="#contact"
                                 class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Contact
                                 Us</a></li>
-                        <li><a href="#training"
+                        {{-- <li><a href="#training"
                                 class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Training</a>
                         </li>
                         <li><a href="#resources"
                                 class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Resources</a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
 
@@ -1309,9 +1371,9 @@
                         <li><a href="#cookies"
                                 class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Cookie
                                 Policy</a></li>
-                        <li><a href="#compliance"
+                        {{-- <li><a href="#compliance"
                                 class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Compliance</a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
             </div>
@@ -1355,7 +1417,35 @@
         </div>
     </footer>
 
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="fixed bottom-8 right-8 bg-gradient-to-r from-blue-500 via-green-500 to-yellow-500 hover:from-blue-600 hover:via-green-600 hover:to-yellow-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 invisible">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+        </svg>
+    </button>
+
     <script src="script.js"></script>
+    <script>
+        // Back to Top Button Functionality
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) { // Show button after scrolling 300px
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.add('opacity-0', 'invisible');
+                backToTopButton.classList.remove('opacity-100', 'visible');
+            }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
 </body>
 
 </html>
