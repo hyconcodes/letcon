@@ -59,24 +59,11 @@ new #[Layout('components.layouts.auth')] class extends Component {
         // Assign member role using Spatie
         $user->assignRole('member');
 
-        if ($this->ref_code && isset($referrer)) {
-            $user->referred_by = $referrer->id;
-            $user->save();
+        // Check if this is the first member user
+        $isFirstMember = User::role('member')->count() === 1;
 
-            Referral::create([
-                'referrer_id' => $referrer->id,
-                'referred_id' => $user->id,
-            ]);
-        } else {
-            // Get the oldest user with less than 4 referrals, excluding user with ID 1
-            $referrer = User::role('member')
-                ->where('id', '!=', 1)
-                ->withCount('referrals')
-                ->having('referrals_count', '<', 4)
-                ->orderBy('created_at', 'asc')
-                ->first();
-
-            if ($referrer) {
+        if (!$isFirstMember) {
+            if ($this->ref_code && isset($referrer)) {
                 $user->referred_by = $referrer->id;
                 $user->save();
 
@@ -84,6 +71,24 @@ new #[Layout('components.layouts.auth')] class extends Component {
                     'referrer_id' => $referrer->id,
                     'referred_id' => $user->id,
                 ]);
+            } else {
+                // Get the oldest user with less than 4 referrals, excluding user with ID 1
+                $referrer = User::role('member')
+                    ->where('id', '!=', 1)
+                    ->withCount('referrals')
+                    ->having('referrals_count', '<', 4)
+                    ->orderBy('created_at', 'asc')
+                    ->first();
+
+                if ($referrer) {
+                    $user->referred_by = $referrer->id;
+                    $user->save();
+
+                    Referral::create([
+                        'referrer_id' => $referrer->id,
+                        'referred_id' => $user->id,
+                    ]);
+                }
             }
         }
 

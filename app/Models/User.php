@@ -79,10 +79,10 @@ class User extends Authenticatable // implements MustVerifyEmail
     /**
      * Get the user's referral code
      */
-    public function getReferralCodeAttribute(): string
-    {
-        return $this->referral_code ?? Str::random(8);
-    }
+    // public function getReferralCodeAttribute(): string
+    // {
+    //     return $this->referral_code ?? Str::random(8);
+    // }
 
     /**
      * Get the user's referrals

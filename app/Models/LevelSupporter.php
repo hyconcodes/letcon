@@ -10,6 +10,7 @@ class LevelSupporter extends Model
         'user_id',
         'supporter_id',
         'level',
+        'assigned_at',
     ];
 
     // Relationships

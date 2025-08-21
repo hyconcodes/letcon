@@ -129,7 +129,7 @@ new class extends Component {
             </div>
         </div>
     <!-- Wema Bank Card -->
-    <div class="bg-white rounded-lg shadow-lg p-6">
+    <div class="bg-white rounded-lg shadow-lg p-6 hidden">
         <div class="flex items-center justify-center mb-4">
             <img src="https://tse1.mm.bing.net/th/id/OIP.25RAYaTjaAa5Yq9KzPYbNwHaFk?rs=1&pid=ImgDetMain&o=7&rm=3" 
                  alt="Wema Bank Logo" 
