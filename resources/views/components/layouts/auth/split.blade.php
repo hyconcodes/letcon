@@ -24,22 +24,20 @@
                     <div class="absolute inset-0 flex items-center justify-center">
                         <div class="text-center">
                             @php
-                                $financialQuotes = [
-                                    ["The best investment you can make is in yourself.", "Warren Buffett"],
-                                    ["An investment in knowledge pays the best interest.", "Benjamin Franklin"],
-                                    ["The stock market is filled with individuals who know the price of everything, but the value of nothing.", "Philip Fisher"],
-                                    ["Risk comes from not knowing what you're doing.", "Warren Buffett"],
-                                    ["The four most dangerous words in investing are: 'this time it's different.'", "Sir John Templeton"]
+                                $systemQuotes = [
+                                    "Join the world's first automated progression system",
+                                    "Experience the future of digital contribution",
+                                    "Be part of the revolutionary pyramid progression pattern",
+                                    "Smart automation meets systematic growth",
+                                    "Leading the way in automated control systems"
                                 ];
-                                $randomQuote = $financialQuotes[array_rand($financialQuotes)];
-                                [$message, $author] = $randomQuote;
+                                $message = $systemQuotes[array_rand($systemQuotes)];
                             @endphp
-                            <h2 class="text-3xl font-bold text-white mb-2">Welcome Back!</h2>
-                            <p class="text-lg text-white">Sign in to manage your finances</p>
-                            <br>
+                            <h2 class="text-3xl font-bold text-white mb-2">Welcome to Innovation!</h2>
+                            <p class="text-lg text-white">THE FIRST DIGITAL CONTRIBUTION COMPANY</p>
+                            <p class="text-lg text-white">WITH AUTOMATED CONTROL SYSTEM</p>
                             <br>
                             <p class="text-lg text-white">&ldquo;{{ $message }}&rdquo;</p>
-                            <p class="text-lg text-white">{{ $author }}</p>
                         </div>
                     </div>
                 </div>

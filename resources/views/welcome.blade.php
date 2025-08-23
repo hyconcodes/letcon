@@ -73,13 +73,13 @@
                 <div class="space-y-8">
                     <div class="space-y-4">
                         <h1 class="text-5xl lg:text-6xl font-bold text-white leading-tight">
-                            Empower Your
-                            <span class="gradient-hero bg-clip-text text-transparent"> Financial Future</span>
+                            The World's First
+                            <span class="gradient-hero bg-clip-text text-transparent">Digital Contribution System</span>
                         </h1>
                         <p class="text-xl text-white leading-relaxed">
-                            Join Letcon's global platform for sustainable wealth building through structured referrals,
-                            transparent upgrades, and community-driven growth. Your journey to financial empowerment
-                            starts here.
+                            Pioneer the future with Letcon - the first company globally to implement an automated control system 
+                            using pyramid progression patterns. Experience revolutionary digital contribution management
+                            that's changing how wealth building works.
                         </p>
                     </div>
 
@@ -131,9 +131,9 @@
             <div class="text-center space-y-4 mb-16">
                 <h2 class="text-4xl font-bold text-letcon-neutral-900">About Letcon</h2>
                 <p class="text-xl text-letcon-neutral-700 max-w-3xl mx-auto">
-                    We're revolutionizing financial empowerment through community-driven wealth building.
-                    Our platform combines transparent processes, structured growth, and genuine support to
-                    help you achieve sustainable financial success.
+                    We are the world's first digital contribution company implementing an automated control system
+                    based on pyramid progression patterns. Our revolutionary platform sets new standards in
+                    financial technology, offering a structured and systematic approach to wealth building.
                 </p>
             </div>
 
@@ -227,8 +227,8 @@
             <div class="text-center space-y-4 mb-16">
                 <h2 class="text-4xl font-bold text-letcon-neutral-900">How Letcon Works</h2>
                 <p class="text-xl text-letcon-neutral-700 max-w-3xl mx-auto">
-                    Our proven system combines community building with transparent financial growth.
-                    Follow our structured path to sustainable wealth building.
+                    As the world's first digital contribution company, we operate an innovative automated control system 
+                    based on pyramid progression patterns. Experience a revolutionary approach to structured financial growth.
                 </p>
             </div>
 
@@ -434,8 +434,7 @@
             <div class="text-center space-y-4 mb-16">
                 <h2 class="text-4xl font-bold text-letcon-neutral-900">Why Choose Letcon</h2>
                 <p class="text-xl text-letcon-neutral-700 max-w-3xl mx-auto">
-                    Join thousands of members who have transformed their financial futures through our
-                    community-driven approach to sustainable wealth building.
+                    Join the world's first digital contribution company implementing an automated control system based on pyramid progression patterns. Experience a revolutionary approach to financial growth through our innovative platform.
                 </p>
             </div>
 
@@ -610,7 +609,7 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 gap-6">
                     <div class="space-y-6">
                         <img src="{{ asset('assets/letcon-community-icon-Bwn6nnFj.jpg') }}"
                             alt="Community growth and networking - interconnected people building wealth together"
