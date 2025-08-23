@@ -20,6 +20,15 @@ new class extends Component {
             return redirect()->route('dashboard')->with('error', 'You must be level 2 or above to withdraw.');
         }
 
+        // Check KYC verification
+        if (!$this->user->kyc_type || !$this->user->kyc_id || !$this->user->kyc_image) {
+            $this->notification = [
+                'type' => 'error',
+                'message' => 'Please complete your KYC verification before making a withdrawal.',
+            ];
+            return;
+        }
+
         // Check bank details
         if (!$this->user->bank_name || !$this->user->bank_account_name || !$this->user->bank_account_number) {
             $this->notification = [
@@ -37,6 +46,15 @@ new class extends Component {
         // Check user level
         if ($this->user->level < 2) {
             return redirect()->route('dashboard')->with('error', 'You must be level 2 or above to withdraw.');
+        }
+
+        // Check KYC verification
+        if (!$this->user->kyc_type || !$this->user->kyc_id || !$this->user->kyc_image) {
+            $this->notification = [
+                'type' => 'error',
+                'message' => 'Please complete your KYC verification before making a withdrawal.',
+            ];
+            return;
         }
 
         // Check bank details
@@ -72,10 +90,14 @@ new class extends Component {
             return;
         }
 
+        // Calculate amount after 0.01% fee
+        $fee = $this->amount * 0.0001;
+        $finalAmount = $this->amount - $fee;
+
         // Create withdrawal request
         \App\Models\Withdrawal::create([
             'user_id' => $this->user->id,
-            'amount' => $this->amount,
+            'amount' => $finalAmount,
             'bank_name' => $this->user->bank_name,
             'bank_account_name' => $this->user->bank_account_name,
             'bank_account_number' => $this->user->bank_account_number,
@@ -85,7 +107,7 @@ new class extends Component {
         // Update wallet balances
         $this->wallet->update([
             'earned_balance' => $this->wallet->earned_balance - $this->amount,
-            'pending_withdraw' => $this->wallet->pending_withdraw + $this->amount
+            'pending_withdraw' => $this->wallet->pending_withdraw + $finalAmount
         ]);
 
         $this->notification = [

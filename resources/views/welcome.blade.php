@@ -55,124 +55,28 @@
 
 <body class="font-inter antialiased bg-letcon-neutral-50 text-letcon-neutral-900">
     <!-- Header -->
-    <header class="sticky top-0 z-50 bg-letcon-neutral-50/95 backdrop-blur-sm border-b border-letcon-neutral-200">
-        <div class="container mx-auto px-4 py-4">
-            <nav class="flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                    <div class="w-8 h-8 gradient-hero rounded-lg flex items-center justify-center">
-                        <span class="text-white font-bold text-lg"><img src="{{ asset('logo.png') }}"
-                                alt=""></span>
-                    </div>
-                    <span class="text-2xl font-bold text-letcon-neutral-900">Letcon</span>
-                </div>
-
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#about"
-                        class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">About</a>
-                    <a href="#how-it-works"
-                        class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">How It Works</a>
-                    <a href="#benefits"
-                        class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">Benefits</a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-button" class="md:hidden text-letcon-neutral-900 focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
-
-                <div class="hidden md:flex items-center space-x-4">
-                    @guest
-                        <a href="{{ route('register') }}" class="btn-hero">Register</a>
-                        <a href="{{ route('login') }}" class="btn-hero">Login</a>
-                    @endguest
-                    @auth
-                        @if (auth()->user()->hasRole('super-admin'))
-                            <a href="{{ route('admin.dashboard') }}" class="btn-hero">Admin Dashboard</a>
-                        @else
-                            <a href="{{ route('dashboard') }}" class="btn-hero">My Dashboard</a>
-                        @endif
-                    @endauth
-                </div>
-            </nav>
-
-            <!-- Mobile Menu Sidebar -->
-            <div id="mobile-menu" class="fixed inset-y-0 left-0 transform -translate-x-full transition duration-300 ease-in-out w-full bg-green-50 shadow-lg z-50 md:hidden">
-                <div class="p-6 space-y-6 bg-green-50">
-                    <div class="flex items-center justify-between mb-8">
-                        <div class="flex items-center space-x-2">
-                            <div class="w-8 h-8 gradient-hero rounded-lg flex items-center justify-center">
-                                <span class="text-white font-bold text-lg"><img src="{{ asset('logo.png') }}" alt=""></span>
-                            </div>
-                            <span class="text-xl font-bold text-letcon-neutral-900">Letcon</span>
-                        </div>
-                        <button id="close-mobile-menu" class="text-letcon-neutral-900">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                    </div>
-
-                    <div class="flex flex-col space-y-4">
-                        <a href="#about" class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">About</a>
-                        <a href="#how-it-works" class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">How It Works</a>
-                        <a href="#benefits" class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">Benefits</a>
-                    </div>
-
-                    <div class="flex flex-col space-y-4 pt-6 border-t">
-                        @guest
-                            <a href="{{ route('register') }}" class="btn-hero text-center">Register</a>
-                            <a href="{{ route('login') }}" class="btn-hero text-center">Login</a>
-                        @endguest
-                        @auth
-                            @if (auth()->user()->hasRole('super-admin'))
-                                <a href="{{ route('admin.dashboard') }}" class="btn-hero text-center">Admin Dashboard</a>
-                            @else
-                                <a href="{{ route('dashboard') }}" class="btn-hero text-center">My Dashboard</a>
-                            @endif
-                        @endauth
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <script>
-        // Mobile menu functionality
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const closeMobileMenu = document.getElementById('close-mobile-menu');
-
-        function toggleMobileMenu() {
-            mobileMenu.classList.toggle('-translate-x-full');
-        }
-
-        mobileMenuButton.addEventListener('click', toggleMobileMenu);
-        closeMobileMenu.addEventListener('click', toggleMobileMenu);
-
-        // Close menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
-                mobileMenu.classList.add('-translate-x-full');
-            }
-        });
-    </script>
+    <x-header/>
 
     <!-- Hero Section -->
     <section class="relative min-h-screen flex items-center py-20 overflow-hidden">
-        <div class="absolute inset-0 gradient-subtle"></div>
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style="background-image: url('{{ asset('assets/people-1.webp') }}')"></div>
+
+        <!-- Green overlay -->
+        <div class="absolute inset-0 bg-letcon-primary opacity-40"></div>
+
+        <!-- Gold overlay -->
+        <div class="absolute inset-0 bg-letcon-gold opacity-20"></div>
 
         <div class="container mx-auto px-4 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div class="grid lg:grid-cols-1 gap-12 items-center">
                 <div class="space-y-8">
                     <div class="space-y-4">
-                        <h1 class="text-5xl lg:text-6xl font-bold text-letcon-neutral-900 leading-tight">
+                        <h1 class="text-5xl lg:text-6xl font-bold text-white leading-tight">
                             Empower Your
                             <span class="gradient-hero bg-clip-text text-transparent"> Financial Future</span>
                         </h1>
-                        <p class="text-xl text-letcon-neutral-700 leading-relaxed">
+                        <p class="text-xl text-white leading-relaxed">
                             Join Letcon's global platform for sustainable wealth building through structured referrals,
                             transparent upgrades, and community-driven growth. Your journey to financial empowerment
                             starts here.
@@ -180,17 +84,19 @@
                     </div>
 
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <button class="btn-hero btn-xl text-lg">
+                        <button class="btn-hero btn-xl text-lg"
+                            onclick="window.location.href = '{{ route('register') }}'">
                             Get Started Today
                         </button>
-                        <button class="btn-outline-hero btn-xl text-lg">
+                        <button
+                            class="btn-outline-hero btn-xl text-lg border-white text-white hover:bg-white hover:text-letcon-primary">
                             Learn More
                         </button>
                     </div>
 
-                    <div class="flex items-center space-x-8 text-sm text-letcon-neutral-700">
+                    <div class="flex items-center space-x-8 text-sm text-white">
                         <div class="flex items-center space-x-2">
-                            <div class="w-2 h-2 bg-letcon-primary rounded-full"></div>
+                            <div class="w-2 h-2 bg-white rounded-full"></div>
                             <span>100% Transparent</span>
                         </div>
                         <div class="flex items-center space-x-2">
@@ -198,13 +104,13 @@
                             <span>Community Driven</span>
                         </div>
                         <div class="flex items-center space-x-2">
-                            <div class="w-2 h-2 bg-letcon-primary rounded-full"></div>
+                            <div class="w-2 h-2 bg-white rounded-full"></div>
                             <span>Sustainable Growth</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="relative">
+                <div class="relative hidden">
                     <div class="relative z-10 transform hover:scale-105 transition-transform duration-500">
                         <img src="{{ asset('assets/letcon-hero-image.jpg') }}"
                             alt="Financial empowerment and community growth - diverse professionals collaborating for wealth building"
@@ -236,7 +142,8 @@
                     <div class="p-8 text-center space-y-4">
                         <div
                             class="mx-auto w-16 h-16 gradient-hero rounded-2xl flex items-center justify-center group-hover:shadow-glow-primary transition-all duration-300">
-                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                             </svg>
@@ -408,7 +315,8 @@
                                     03</div>
                             </div>
                             <h3 class="text-xl font-semibold text-letcon-neutral-900">Achieve Level Growth</h3>
-                            <p class="text-letcon-neutral-700 leading-relaxed">Move up step by step like a pyramid — each level doubles your earnings and grows your community.</p>
+                            <p class="text-letcon-neutral-700 leading-relaxed">Move up step by step like a pyramid —
+                                each level doubles your earnings and grows your community.</p>
                         </div>
                     </div>
                     <div class="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-10">
@@ -513,7 +421,8 @@
 
 
                 <div class="text-center">
-                    <button class="btn-hero btn-lg">Start Your Journey Today</button>
+                    <button class="btn-hero btn-lg" onclick="window.location.href = '{{ route('register') }}'">Start
+                        Your Journey Today</button>
                 </div>
             </div>
         </div>
@@ -1174,7 +1083,8 @@
 
                             <div class="text-center space-y-6">
                                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                                    <button class="btn-hero btn-xl text-lg group">
+                                    <button class="btn-hero btn-xl text-lg group"
+                                        onclick="window.location.href = '{{ route('register') }}'">
                                         Join Letcon Now
                                         <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform"
                                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1182,17 +1092,18 @@
                                                 d="M9 5l7 7-7 7"></path>
                                         </svg>
                                     </button>
-                                    <button class="btn-outline-hero btn-xl text-lg">
-                                        Schedule a Call
+                                    <button class="btn-outline-hero btn-xl text-lg"
+                                        onclick="window.location.href = 'https://wa.me/2347032468725'">
+                                        Chat with Us
                                     </button>
                                 </div>
 
                                 <div
                                     class="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-letcon-neutral-700">
-                                    <div class="flex items-center space-x-2">
+                                    {{-- <div class="flex items-center space-x-2">
                                         <div class="w-2 h-2 bg-letcon-primary rounded-full"></div>
                                         <span>No setup fees</span>
-                                    </div>
+                                    </div> --}}
                                     <div class="flex items-center space-x-2">
                                         <div class="w-2 h-2 bg-letcon-gold rounded-full"></div>
                                         <span>Instant access</span>
@@ -1234,218 +1145,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-letcon-neutral-900 text-letcon-neutral-100">
-        <div class="container mx-auto px-4 py-16">
-            <div class="grid lg:grid-cols-5 gap-12">
-                <!-- Brand Section -->
-                <div class="lg:col-span-2 space-y-6">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 gradient-hero rounded-xl flex items-center justify-center">
-                            <span class="text-white font-bold text-xl"><img src="{{ asset('logo.png') }}"
-                                    alt=""></span>
-                        </div>
-                        <span class="text-3xl font-bold text-white">Letcon</span>
-                    </div>
-
-                    <p class="text-letcon-neutral-200 leading-relaxed max-w-md">
-                        Empowering financial futures through community-driven wealth building.
-                        Join thousands of members building sustainable income and achieving financial freedom.
-                    </p>
-
-                    <div class="space-y-3">
-                        <div class="flex items-center space-x-3 text-letcon-neutral-200">
-                            <svg class="w-5 h-5 text-letcon-primary-light" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                                </path>
-                            </svg>
-                            <span>support@letcon.com.ng</span>
-                        </div>
-                        {{-- <div class="flex items-center space-x-3 text-letcon-neutral-200">
-                            <svg class="w-5 h-5 text-letcon-primary-light" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z">
-                                </path>
-                            </svg>
-                            <span>+234 907 2236 347</span>
-                        </div> --}}
-                        <div class="flex items-center space-x-3 text-letcon-neutral-200">
-                            <svg class="w-5 h-5 text-letcon-primary-light" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
-                            </svg>
-                            <span><a href="https://wa.me/2347032468725">Chat our support team</a></span>
-                        </div>
-                        <div class="flex items-center space-x-3 text-letcon-neutral-200 hidden">
-                            <svg class="w-5 h-5 text-letcon-primary-light" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                </path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                            <span class="">Global Headquarters, Singapore</span>
-                        </div>
-                    </div>
-
-                    <div class="flex space-x-4">
-                        <a href="#" aria-label="Facebook"
-                            class="w-10 h-10 bg-letcon-neutral-700 hover:gradient-hero rounded-lg flex items-center justify-center transition-all duration-300 hover:shadow-glow-primary">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                            </svg>
-                        </a>
-                        <a href="#" aria-label="Twitter"
-                            class="w-10 h-10 bg-letcon-neutral-700 hover:gradient-hero rounded-lg flex items-center justify-center transition-all duration-300 hover:shadow-glow-primary">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-                            </svg>
-                        </a>
-                        <a href="#" aria-label="Instagram"
-                            class="w-10 h-10 bg-letcon-neutral-700 hover:gradient-hero rounded-lg flex items-center justify-center transition-all duration-300 hover:shadow-glow-primary">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987 6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.596-3.205-1.533l1.109-.766c.542.669 1.370 1.098 2.287 1.098 1.606 0 2.907-1.301 2.907-2.907S10.055 10.973 8.449 10.973s-2.907 1.301-2.907 2.907c0 .381.073.745.206 1.078l-1.323.405C4.29 14.847 4.245 14.34 4.245 13.88c0-2.323 1.885-4.208 4.208-4.208s4.208 1.885 4.208 4.208-1.885 4.208-4.208 4.208z" />
-                            </svg>
-                        </a>
-                        <a href="#" aria-label="LinkedIn"
-                            class="w-10 h-10 bg-letcon-neutral-700 hover:gradient-hero rounded-lg flex items-center justify-center transition-all duration-300 hover:shadow-glow-primary">
-                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Navigation Sections -->
-                <div class="space-y-4">
-                    <h3 class="text-lg font-semibold text-white">Platform</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#how-it-works"
-                                class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">How
-                                It Works</a></li>
-                        {{-- <li><a href="#pricing"
-                                class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Pricing</a>
-                        </li>
-                        <li><a href="#testimonials"
-                                class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Success
-                                Stories</a></li>
-                        <li><a href="#community"
-                                class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Community</a>
-                        </li> --}}
-                    </ul>
-                </div>
-
-                <div class="space-y-4">
-                    <h3 class="text-lg font-semibold text-white">Support</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#help"
-                                class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Help
-                                Center</a></li>
-                        <li><a href="#contact"
-                                class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Contact
-                                Us</a></li>
-                        {{-- <li><a href="#training"
-                                class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Training</a>
-                        </li>
-                        <li><a href="#resources"
-                                class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Resources</a>
-                        </li> --}}
-                    </ul>
-                </div>
-
-                <div class="space-y-4">
-                    <h3 class="text-lg font-semibold text-white">Legal</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#privacy"
-                                class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Privacy
-                                Policy</a></li>
-                        <li><a href="#terms"
-                                class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Terms
-                                of Service</a></li>
-                        <li><a href="#cookies"
-                                class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Cookie
-                                Policy</a></li>
-                        {{-- <li><a href="#compliance"
-                                class="text-letcon-neutral-200 hover:text-letcon-primary-light transition-colors duration-200">Compliance</a>
-                        </li> --}}
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Newsletter -->
-            <div class="mt-16 pt-8 border-t border-letcon-neutral-700">
-                <div class="grid md:grid-cols-2 gap-8 items-center">
-                    <div>
-                        <h3 class="text-xl font-semibold text-white mb-2">Stay Updated</h3>
-                        <p class="text-letcon-neutral-200">
-                            Get the latest news, success stories, and platform updates delivered to your inbox.
-                        </p>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <input type="email" placeholder="Enter your email"
-                            class="flex-1 px-4 py-3 bg-letcon-neutral-700 border border-letcon-neutral-600 rounded-lg text-white placeholder-letcon-neutral-300 focus:outline-none focus:border-letcon-primary-light" />
-                        <button
-                            class="px-6 py-3 gradient-hero text-white font-semibold rounded-lg hover:shadow-glow-primary transition-all duration-300 whitespace-nowrap">
-                            Subscribe
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bottom Bar -->
-            <div class="mt-16 pt-8 border-t border-letcon-neutral-700">
-                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div class="text-letcon-neutral-300 text-sm">
-                        © 2024 Letcon. All rights reserved. Building financial empowerment globally.
-                    </div>
-
-                    <div class="flex flex-wrap gap-6 text-sm text-letcon-neutral-300">
-                        <a href="#sitemap" class="hover:text-letcon-primary-light transition-colors">Sitemap</a>
-                        <a href="#accessibility"
-                            class="hover:text-letcon-primary-light transition-colors">Accessibility</a>
-                        <a href="#security" class="hover:text-letcon-primary-light transition-colors">Security</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Back to Top Button -->
-    <button id="backToTop" class="fixed bottom-8 right-8 bg-gradient-to-r from-blue-500 via-green-500 to-yellow-500 hover:from-blue-600 hover:via-green-600 hover:to-yellow-600 text-white p-3 rounded-full shadow-lg transition-all duration-300 opacity-0 invisible">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-        </svg>
-    </button>
-
-    <script src="script.js"></script>
-    <script>
-        // Back to Top Button Functionality
-        const backToTopButton = document.getElementById('backToTop');
-        
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 300) { // Show button after scrolling 300px
-                backToTopButton.classList.remove('opacity-0', 'invisible');
-                backToTopButton.classList.add('opacity-100', 'visible');
-            } else {
-                backToTopButton.classList.add('opacity-0', 'invisible');
-                backToTopButton.classList.remove('opacity-100', 'visible');
-            }
-        });
-
-        backToTopButton.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-    </script>
+    <x-footer />
 </body>
 
 </html>

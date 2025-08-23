@@ -39,6 +39,9 @@ class User extends Authenticatable // implements MustVerifyEmail
         'bank_account_name',
         'bank_account_number',
         'pin',
+        'kyc_type',
+        'kyc_id',
+        'kyc_image',
     ];
 
     /**

@@ -19,13 +19,13 @@ new class extends Component {
     {
         $this->level = $level;
         $this->currentUser = User::with('referrer:id,name')
-            ->select('id', 'name', 'picture', 'email', 'phone', 'referred_by', 'level', 'referral_code')
+            ->select('id', 'name', 'picture', 'email', 'phone', 'referred_by', 'level', 'referral_code', 'created_at')
             ->find(auth()->id());
 
         // For level 1, show only direct referrals
         if ($level == 1) {
             $referrals = User::where('referred_by', auth()->id())
-                ->select('users.id', 'name', 'picture', 'email', 'phone', 'referred_by', 'level', 'referral_code')
+                ->select('users.id', 'name', 'picture', 'email', 'phone', 'referred_by', 'level', 'referral_code', 'created_at')
                 ->with(['referrer:id,name'])
                 ->take(4)
                 ->get();
@@ -37,7 +37,7 @@ new class extends Component {
                 })
                 ->where('level_supporters.user_id', auth()->id()) // only my supporters
                 ->where('level_supporters.level', $level) // they helped me move into this level
-                ->select('users.id', 'users.name', 'users.picture', 'users.email', 'users.phone', 'users.referred_by', 'users.level', 'users.referral_code', 'level_history.upgraded_at')
+                ->select('users.id', 'users.name', 'users.picture', 'users.email', 'users.phone', 'users.referred_by', 'users.level', 'users.referral_code', 'users.created_at', 'level_history.upgraded_at')
                 ->with(['referrer:id,name'])
                 ->orderBy('level_history.upgraded_at', 'asc')
                 ->take(4)
@@ -54,7 +54,7 @@ new class extends Component {
 
     public function showUserDetails($userId)
     {
-        $this->selectedUser = User::with('referrer:id,name')->select('id', 'name', 'picture', 'email', 'phone', 'referred_by', 'level', 'referral_code')->find($userId);
+        $this->selectedUser = User::with('referrer:id,name')->select('id', 'name', 'picture', 'email', 'phone', 'referred_by', 'level', 'referral_code', 'created_at')->find($userId);
 
         $this->hasPaid = Payment::where('user_id', $userId)->where('status', 'paid')->exists();
 
@@ -178,6 +178,7 @@ new class extends Component {
                     </div>
                     <div class="flex-1">
                         <h4 class="text-base md:text-lg font-semibold dark:text-white">{{ $selectedUser->name }}</h4>
+                        <p class="text-xs md:text-sm text-zinc-600 dark:text-zinc-400">Joined: {{ $selectedUser->created_at->diffForHumans() }}</p>
                         <p class="text-xs md:text-sm text-zinc-600 dark:text-zinc-400">Referral Code:
                             {{ $selectedUser->referral_code ?? 'N/A' }}</p>
                         <p class="text-xs md:text-sm text-zinc-600 dark:text-zinc-400">Referred By:

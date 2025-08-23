@@ -170,7 +170,8 @@
 
             <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
                 {{-- <h2 class="text-xl font-bold mb-4">Transaction History</h2> --}}
-                <h2 class="text-xl font-bold mb-4">......</h2>
+                {{-- <h2 class="text-xl font-bold mb-4">......</h2> --}}
+                <img src="{{ asset('assets/lecton-dash.png') }}" alt="">
                 <!-- Add transaction history content here -->
             </div>
         </div>

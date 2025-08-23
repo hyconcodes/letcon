@@ -9,6 +9,7 @@ new class extends Component {
     public $search = '';
     public $selectedWithdrawal = null;
     public $comment = '';
+    public $selectedKYC = null;
 
     public function mount() {
         $this->loadWithdrawals();
@@ -39,6 +40,19 @@ new class extends Component {
     public function openRejectModal($withdrawalId) {
         $this->selectedWithdrawal = $withdrawalId;
         $this->comment = '';
+    }
+
+    public function closeRejectModal() {
+        $this->selectedWithdrawal = null;
+        $this->comment = '';
+    }
+
+    public function closeKYCModal() {
+        $this->selectedKYC = null;
+    }
+
+    public function viewKYC($userId) {
+        $this->selectedKYC = \App\Models\User::findOrFail($userId);
     }
 
     public function updateStatus($withdrawalId, $status, $requireComment = false) {
@@ -188,7 +202,7 @@ new class extends Component {
                                         @can('reject.withdrawal')
                                         <button 
                                             wire:click="openRejectModal({{ $withdrawal->id }})"
-                                            class="text-sm bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+                                            class="text-sm bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 mr-2"
                                         >
                                             Reject
                                         </button>
@@ -196,11 +210,17 @@ new class extends Component {
                                     @elseif($withdrawal->status === 'rejected')
                                         <button 
                                             wire:click="updateStatus({{ $withdrawal->id }}, 'pending')"
-                                            class="text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600"
+                                            class="text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 mr-2"
                                         >
                                             Move to Pending
                                         </button>
                                     @endif
+                                    <button 
+                                        wire:click="viewKYC({{ $withdrawal->user_id }})"
+                                        class="text-sm bg-purple-500 text-white px-3 py-1 rounded-md hover:bg-purple-600"
+                                    >
+                                        View KYC
+                                    </button>
                                 </td>
                             </tr>
                             @endforeach
@@ -224,7 +244,7 @@ new class extends Component {
             ></textarea>
             <div class="flex justify-end space-x-2">
                 <button 
-                    wire:click="$set('selectedWithdrawal', null)"
+                    wire:click="closeRejectModal"
                     class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
                 >
                     Cancel
@@ -234,6 +254,44 @@ new class extends Component {
                     class="px-4 py-2 text-sm bg-red-500 text-white rounded-md hover:bg-red-600"
                 >
                     Confirm Rejection
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
+
+    @if($selectedKYC)
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white dark:bg-zinc-800 p-6 rounded-lg w-96">
+            <h3 class="text-lg font-medium mb-4">KYC Information</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">KYC Type</label>
+                    <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        {{ strtoupper($selectedKYC->kyc_type) ?? 'Not provided' }}
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">KYC ID</label>
+                    <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                        {{ $selectedKYC->kyc_id ?? 'Not provided' }}
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">KYC Image</label>
+                    @if($selectedKYC->kyc_image)
+                        <img src="{{ asset('storage/' . $selectedKYC->kyc_image) }}" alt="KYC Image" class="mt-2 max-w-full h-auto rounded-lg">
+                    @else
+                        <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">No image provided</div>
+                    @endif
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end">
+                <button 
+                    wire:click="closeKYCModal"
+                    class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800"
+                >
+                    Close
                 </button>
             </div>
         </div>
