@@ -2,12 +2,13 @@
 
 namespace App\Console\Commands;
 
-use App\Models\LevelHistory;
+use App\Models\Levelhistory;
 use App\Models\Referral;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Earning;
 use App\Models\LevelSupporter;
+use App\Models\Payment;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -34,7 +35,13 @@ class LetconUpgrade extends Command
 
     private function processLevel1Users()
     {
-        $level1Users = User::where('level', 1)->get();
+        $level1Users = User::where('level', 1)
+            ->whereHas('payments', function($query) {
+                $query->where('status', 'paid')
+                      ->where('amount', 20000);
+            })
+            ->get();
+            
         $upgradedUsers = [];
 
         foreach ($level1Users as $user) {
@@ -91,7 +98,7 @@ class LetconUpgrade extends Command
 
     private function processLevel1User(User $user, array &$upgradedUsers)
     {
-        // STRICT rule: must have 4 direct referrals who paid ₦20,000
+        // STRICT rule: must have 4 direct referrals who paid ₦20,000 AND must have paid their own ₦20,000
         $count = $this->countPaidReferrals($user->id);
         if ($count >= 4) {
             $this->upgradeUser($user, $upgradedUsers, []); // no supporters recorded for L1→L2
@@ -121,7 +128,7 @@ class LetconUpgrade extends Command
 
     private function getArrivalAtLevel(User $user, int $level): ?string
     {
-        return LevelHistory::where('user_id', $user->id)
+        return Levelhistory::where('user_id', $user->id)
             ->where('to_level', $level)
             ->value('upgraded_at');
     }
@@ -193,7 +200,7 @@ class LetconUpgrade extends Command
             $user->save();
 
             // Record level history
-            LevelHistory::create([
+            Levelhistory::create([
                 'user_id'     => $user->id,
                 'from_level'  => $currentLevel,
                 'to_level'    => $nextLevel,

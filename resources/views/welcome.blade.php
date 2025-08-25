@@ -74,11 +74,10 @@
                     <div class="space-y-4">
                         <h1 class="text-5xl lg:text-6xl font-bold text-white leading-tight">
                             The World's First
-                            <span class="gradient-hero bg-clip-text text-transparent">Digital Contribution System</span>
+                            <span class="gradient-hero bg-clip-text text-transparent">Pyramid Progression Digitalized Contribution System</span>
                         </h1>
                         <p class="text-xl text-white leading-relaxed">
-                            Pioneer the future with Letcon - the first company globally to implement an automated control system 
-                            using pyramid progression patterns. Experience revolutionary digital contribution management
+                            Pioneer the future with Letcon - the first pyramid progression company, globally implement an automated control system. Experience revolutionary digital contribution management
                             that's changing how wealth building works.
                         </p>
                     </div>
@@ -131,7 +130,7 @@
             <div class="text-center space-y-4 mb-16">
                 <h2 class="text-4xl font-bold text-letcon-neutral-900">About Letcon</h2>
                 <p class="text-xl text-letcon-neutral-700 max-w-3xl mx-auto">
-                    We are the world's first digital contribution company implementing an automated control system
+                    We are the world's first pyramid progression digitalized contribution company implementing an automated control system
                     based on pyramid progression patterns. Our revolutionary platform sets new standards in
                     financial technology, offering a structured and systematic approach to wealth building.
                 </p>
@@ -536,26 +535,7 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="card group">
-                    <div class="p-8 space-y-4">
-                        <div
-                            class="w-14 h-14 gradient-hero rounded-xl flex items-center justify-center group-hover:shadow-glow-primary transition-all duration-300">
-                            <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="space-y-2">
-                            <h3 class="text-xl font-semibold text-letcon-neutral-900">Recognition & Rewards</h3>
-                            <p class="text-letcon-neutral-700 leading-relaxed">Celebrate achievements with community
-                                recognition, exclusive events, and milestone rewards.</p>
-                            <div class="text-sm font-medium text-letcon-primary">Monthly recognition programs</div>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
 
             <!-- Feature Highlights -->
@@ -615,7 +595,7 @@
                             alt="Community growth and networking - interconnected people building wealth together"
                             class="w-full h-48 object-cover rounded-2xl shadow-elevation-2" />
                         <div class="text-center p-6 gradient-subtle rounded-xl">
-                            <div class="text-2xl font-bold text-letcon-primary mb-1">10,000+</div>
+                            <div class="text-2xl font-bold text-letcon-primary mb-1">5,000+</div>
                             <div class="text-sm text-letcon-neutral-700">Active Members</div>
                         </div>
                     </div>
@@ -1005,7 +985,7 @@
                                 <div class="w-8 h-8 bg-white/20 border-2 border-white rounded-full"></div>
                                 <div class="w-8 h-8 bg-white/20 border-2 border-white rounded-full"></div>
                             </div>
-                            <span class="text-sm">10,000+ members</span>
+                            <span class="text-sm">5,000+ members</span>
                         </div>
                         <div class="text-sm">•</div>
                         <div class="text-sm">4.9/5 average rating</div>
@@ -1122,7 +1102,7 @@
             <div class="mt-16 text-center hidden">
                 <p class="text-letcon-neutral-700 mb-8">Trusted by thousands of members worldwide</p>
                 <div class="flex flex-wrap justify-center items-center gap-8 opacity-60">
-                    <div class="text-2xl font-bold">10,000+</div>
+                    <div class="text-2xl font-bold">5,000+</div>
                     <div class="w-px h-8 bg-letcon-neutral-200"></div>
                     <div class="text-2xl font-bold">50+</div>
                     <div class="w-px h-8 bg-letcon-neutral-200"></div>

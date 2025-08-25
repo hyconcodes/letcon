@@ -68,15 +68,15 @@ new class extends Component {
             @php
                 $levels = [
                     ['round' => 1, 'name' => 'Registration', 'amount' => '20K', 'payout' => null, 'emoji' => null],
-                    ['round' => 2, 'name' => 'ROUND 2', 'amount' => '40K', 'payout' => '32K', 'emoji' => '🥉'],
-                    ['round' => 3, 'name' => 'ROUND 3', 'amount' => '80K', 'payout' => '64K', 'emoji' => '🥈'],
-                    ['round' => 4, 'name' => 'ROUND 4', 'amount' => '160K', 'payout' => '128K', 'emoji' => '🥇'],
-                    ['round' => 5, 'name' => 'ROUND 5', 'amount' => '320K', 'payout' => '256K', 'emoji' => '🏆'],
-                    ['round' => 6, 'name' => 'ROUND 6', 'amount' => '640K', 'payout' => '512K', 'emoji' => '👑'],
-                    ['round' => 7, 'name' => 'ROUND 7', 'amount' => '1.28M', 'payout' => '1.02M', 'emoji' => '💎'],
-                    ['round' => 8, 'name' => 'ROUND 8', 'amount' => '2.56M', 'payout' => '2.05M', 'emoji' => '💫'],
-                    ['round' => 9, 'name' => 'ROUND 9', 'amount' => '5.12M', 'payout' => '4.10M', 'emoji' => '⭐'],
-                    ['round' => 10, 'name' => 'ROUND 10', 'amount' => '10M', 'payout' => '20M', 'emoji' => '🌟'],
+                    ['round' => 2, 'name' => 'LEVEL 2', 'amount' => '40K', 'payout' => '32K', 'emoji' => '🥉'],
+                    ['round' => 3, 'name' => 'LEVEL 3', 'amount' => '80K', 'payout' => '64K', 'emoji' => '🥈'],
+                    ['round' => 4, 'name' => 'LEVEL 4', 'amount' => '160K', 'payout' => '128K', 'emoji' => '🥇'],
+                    ['round' => 5, 'name' => 'LEVEL 5', 'amount' => '320K', 'payout' => '256K', 'emoji' => '🏆'],
+                    ['round' => 6, 'name' => 'LEVEL 6', 'amount' => '640K', 'payout' => '512K', 'emoji' => '👑'],
+                    ['round' => 7, 'name' => 'LEVEL 7', 'amount' => '1.28M', 'payout' => '1.02M', 'emoji' => '💎'],
+                    ['round' => 8, 'name' => 'LEVEL 8', 'amount' => '2.56M', 'payout' => '2.05M', 'emoji' => '💫'],
+                    ['round' => 9, 'name' => 'LEVEL 9', 'amount' => '5.12M', 'payout' => '4.10M', 'emoji' => '⭐'],
+                    ['round' => 10, 'name' => 'LEVEL 10', 'amount' => '10M', 'payout' => '20M', 'emoji' => '🌟'],
                 ];
             @endphp
 
@@ -88,10 +88,10 @@ new class extends Component {
                             <span class="text-2xl">{{ $level['emoji'] }}</span>
                         @endif
                     </div>
-                    <p class="text-2xl font-bold text-green-600 mt-4">₦{{ $level['amount'] }}</p>
                     @if($level['payout'])
-                        <p class="mt-2 text-gray-500">Board payout ₦{{ $level['payout'] }}</p>
+                        <p class="mt-2 font-bold text-2xl text-green-600">Payout ₦{{ $level['payout'] }}</p>
                     @endif
+                    <p class="text-blue-600 mt-4">Fee ₦{{ $level['amount'] }}</p>
                     <div class="mt-6 space-y-2">
                         @if($this->hasLevel($level['round']))
                             <button class="w-full bg-green-500 text-white font-semibold py-2 rounded-lg">

@@ -43,6 +43,16 @@ new class extends Component {
         $this->filteredUsers = $this->users->count();
     }
 
+    public function deleteUser($userId)
+    {
+        $user = User::find($userId);
+        if ($user) {
+            $user->delete();
+            session()->flash('message', 'User deleted successfully.');
+            $this->refreshUsers();
+        }
+    }
+
     public function updatedSearch()
     {
         $this->refreshUsers();
@@ -57,6 +67,12 @@ new class extends Component {
 <div>
     <div class="bg-white dark:bg-zinc-800 rounded-xl shadow-sm">
         <div class="p-2 sm:p-4">
+            @if (session()->has('message'))
+                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-md">
+                    {{ session('message') }}
+                </div>
+            @endif
+
             <div class="mb-4 sm:mb-6">
                 <h1 class="text-xl sm:text-2xl font-bold text-secondary-900 dark:text-white mb-2">Member Management</h1>
                 <p class="text-sm sm:text-base text-secondary-500 dark:text-secondary-400">Manage and monitor all registered members</p>
@@ -90,6 +106,7 @@ new class extends Component {
                             <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Profile</th>
                             <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Info</th>
                             <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Level & Status</th>
+                            <th class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-300 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white dark:bg-zinc-800 divide-y divide-secondary-200 dark:divide-secondary-700">
@@ -119,6 +136,13 @@ new class extends Component {
                                     <div class="text-xs sm:text-sm text-secondary-500 dark:text-secondary-400">
                                         <span class="hidden sm:inline">Upgraded: </span>{{ $user->levelHistory()->latest()->first()?->created_at->format('F j, Y g:i A') ?? 'Not upgraded yet' }}
                                     </div>
+                                </td>
+                                <td class="px-3 sm:px-6 py-2 sm:py-4">
+                                    <button wire:click="deleteUser({{ $user->id }})" class="text-red-600 hover:text-red-900">
+                                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
