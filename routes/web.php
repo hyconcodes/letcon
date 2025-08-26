@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PaystackController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -19,6 +20,11 @@ Route::get('terms-conditions', function () {
 Route::get('privacy-policy', function () {
     return view('privacy');
 })->name('privacy');
+
+Route::get('/storage-link', function () {
+    Artisan::call('storage:link');
+    return 'Storage link has been created.';
+})->middleware(['auth', 'role:super-admin']);
 
 
 // Members dashboard routes

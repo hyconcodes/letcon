@@ -42,17 +42,19 @@
                     </div>
                 </div>
             </div>
-            @php
-                [$message, $author] = str(Illuminate\Foundation\Inspiring::quotes()->random())->explode('-');
-            @endphp
-
             <div class="relative z-20 mt-auto">
-                <blockquote class="space-y-2">
-                    <flux:heading size="lg">&ldquo;{{ trim($message) }}&rdquo;</flux:heading>
-                    <footer>
-                        <flux:heading>{{ trim($author) }}</flux:heading>
-                    </footer>
-                </blockquote>
+                <div class="space-y-2 text-center">
+                    <flux:heading size="lg" class="text-2xl font-bold" tag="h1">
+                        Innovative Digital Wealth Building Platform | Automated Investment System
+                    </flux:heading>
+                    <div class="mt-4">
+                        <flux:heading class="text-lg opacity-90" tag="h2">
+                            Transform your financial future with Letcon's revolutionary automated investment platform. Our secure, transparent digital contribution system helps you build wealth through smart technology and systematic progression.
+                        </flux:heading>
+                        <meta name="description" content="Letcon - Leading automated investment platform offering digital wealth building solutions through smart technology and systematic progression. Join our innovative financial ecosystem today.">
+                        <meta name="keywords" content="automated investment, digital wealth building, smart investment platform, financial technology, systematic progression, automated control system">
+                    </div>
+                </div>
             </div>
         </div>
         <div class="w-full lg:p-8">
