@@ -69,9 +69,9 @@ class DeleteMemberWithoutPaymentAfterThirtyMinute extends Command
                 $user->delete();
                 
                 $deletedCount++;
-                $this->info("Deleted user: {$userId}");
+                $this->info("Deleted user: {$userId} ({$user->name})");
                 
-                Log::info("Successfully deleted user: {$userId}");
+                Log::info("Successfully deleted user: {$userId} ({$user->name})");
             } catch (\Exception $e) {
                 $failedCount++;
                 Log::error('Failed to delete user: ' . $userId, [
