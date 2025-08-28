@@ -150,7 +150,7 @@
             <div class="mt-16 pt-8 border-t border-letcon-neutral-700">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <div class="text-letcon-neutral-300 text-sm">
-                        © 2024 Letcon. All rights reserved. Building financial empowerment globally.
+                        © {{ date('Y') }} Letcon. All rights reserved. Building financial empowerment globally.
                     </div>
 
                     <div class="hidden flex flex-wrap gap-6 text-sm text-letcon-neutral-300">
