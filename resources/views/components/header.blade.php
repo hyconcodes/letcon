@@ -10,15 +10,7 @@
                 </div>
 
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#about"
-                        class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">About</a>
-                    <a href="#how-it-works"
-                        class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">How It Works</a>
-                    <a href="#benefits"
-                        class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">Benefits</a>
-                </div>
-
+            
                 <!-- Mobile Menu Button -->
                 <button id="mobile-menu-button" class="md:hidden text-letcon-neutral-900 focus:outline-none">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,14 +54,7 @@
                         </button>
                     </div>
 
-                    <div class="flex flex-col space-y-4">
-                        <a href="#about"
-                            class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">About</a>
-                        <a href="#how-it-works"
-                            class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">How It Works</a>
-                        <a href="#benefits"
-                            class="text-letcon-neutral-700 hover:text-letcon-primary transition-colors">Benefits</a>
-                    </div>
+                    
 
                     <div class="flex flex-col space-y-4 pt-6 border-t">
                         @guest
