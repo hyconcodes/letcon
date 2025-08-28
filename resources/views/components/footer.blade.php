@@ -162,7 +162,7 @@
                         © 2024 Letcon. All rights reserved. Building financial empowerment globally.
                     </div>
 
-                    <div class="flex flex-wrap gap-6 text-sm text-letcon-neutral-300">
+                    <div class="hidden flex flex-wrap gap-6 text-sm text-letcon-neutral-300">
                         <a href="#sitemap" class="hover:text-letcon-primary-light transition-colors">Sitemap</a>
                         <a href="#accessibility"
                             class="hover:text-letcon-primary-light transition-colors">Accessibility</a>

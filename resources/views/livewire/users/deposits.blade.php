@@ -1,6 +1,8 @@
 <?php
 
 use Livewire\Volt\Component;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 
 new class extends Component {
     public function depositPaystack()
@@ -17,10 +19,10 @@ new class extends Component {
             }
 
             $client = new \GuzzleHttp\Client();
-            
+
             // Generate unique reference
-            $reference = 'PAY_'.time().'_'.auth()->id();
-            
+            $reference = 'PAY_' . time() . '_' . auth()->id();
+
             $response = $client->post(env('PAYSTACK_PAYMENT_URL') . '/transaction/initialize', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . env('PAYSTACK_SECRET_KEY'),
@@ -32,9 +34,9 @@ new class extends Component {
                     'reference' => $reference,
                     'callback_url' => route('paystack.callback'),
                     'metadata' => [
-                        'user_id' => auth()->id()
-                    ]
-                ]
+                        'user_id' => auth()->id(),
+                    ],
+                ],
             ]);
 
             $result = json_decode($response->getBody());
@@ -42,7 +44,7 @@ new class extends Component {
             if ($result->status) {
                 // Store transaction reference
                 session(['paystack_reference' => $reference]);
-                
+
                 // Redirect to Paystack payment page
                 return redirect($result->data->authorization_url);
             }
@@ -51,29 +53,103 @@ new class extends Component {
             \Log::error('Paystack payment initialization failed: Payment could not be initialized', [
                 'user_id' => auth()->id(),
                 'reference' => $reference,
-                'response' => $result
+                'response' => $result,
             ]);
-            
+
             session()->flash('error', 'We encountered an issue processing your payment. Our team has been notified. Please try again in a few minutes.');
             return redirect()->back();
-
         } catch (\Exception $e) {
             // Log detailed error information
             \Log::error('Paystack payment initialization failed: ' . $e->getMessage(), [
                 'user_id' => auth()->id(),
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
-                'reference' => $reference ?? null
+                'reference' => $reference ?? null,
             ]);
-            
+
             session()->flash('error', 'We\'re currently experiencing technical difficulties with our payment system. Please try again later or contact support if the issue persists.');
             return redirect()->back();
         }
     }
 
-    public function depositWema()
+    public function depositOpay()
     {
-        // Handle Wema bank deposit logic
+        try {
+            // Check if user has already made one-time payment
+            $existingPayment = App\Models\Payment::where('user_id', auth()->id())
+                ->where('status', 'paid')
+                ->first();
+
+            if ($existingPayment) {
+                session()->flash('error', 'You have already made the one-time payment.');
+                return redirect()->back();
+            }
+
+            $reference = Str::uuid()->toString();
+
+            $data = [
+                'country' => 'NG',
+                'reference' => $reference,
+                'amount' => [
+                    'total' => 20000 * 100,
+                    'currency' => 'NGN',
+                ],
+                'returnUrl' => route('wallets'),
+                'callbackUrl' => route('opay.callback'),
+                // 'cancelUrl' => route('opay.cancel'),
+                'evokeOpay' => true,
+                'customerVisitSource' => 'WEB',
+                'expireAt' => 30,
+                'userInfo' => [
+                    'userEmail' => auth()->user()->email,
+                    'userId' => auth()->id(),
+                    'userMobile' => auth()->user()->phone ?? '',
+                    'userName' => auth()->user()->name,
+                ],
+                'product' => [
+                    'name' => 'Level 1 Contribution',
+                    'description' => 'Letcon one-time deposit payment',
+                ],
+                // 'payMethod' => 'BankCard',
+            ];
+
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . env('OPAY_PUBLIC_KEY'),
+                'MerchantId' => env('OPAY_MERCHANT_ID'),
+            ])->post('https://testapi.opaycheckout.com/api/v1/international/cashier/create', $data);
+
+            $result = $response->json();
+
+            if ($response->successful() && isset($result['data']['cashierUrl'])) {
+                // Store transaction reference
+                session(['opay_reference' => $reference]);
+
+                // Redirect to OPay checkout page
+                return redirect()->away($result['data']['cashierUrl']);
+            }
+
+            // If cashierUrl is missing, log an error
+            \Log::error('OPay payment initialization failed', [
+                'user_id' => auth()->id(),
+                'reference' => $reference,
+                'response' => $result,
+            ]);
+
+            session()->flash('error', 'We encountered an issue processing your payment. Please try again.');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            // Log detailed error information
+            \Log::error('OPay payment initialization failed: ' . $e->getMessage(), [
+                'user_id' => auth()->id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'reference' => $reference ?? null,
+            ]);
+
+            session()->flash('error', 'We\'re currently experiencing technical difficulties with our payment system. Please try again later.');
+            return redirect()->back();
+        }
     }
 }; ?>
 
@@ -88,7 +164,7 @@ new class extends Component {
             <span>{{ session('error') }}</span>
             <button onclick="this.parentElement.remove()" class="focus:outline-none">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
@@ -99,7 +175,7 @@ new class extends Component {
             <span>{{ session('success') }}</span>
             <button onclick="this.parentElement.remove()" class="focus:outline-none">
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
         </div>
@@ -109,41 +185,39 @@ new class extends Component {
         <!-- Paystack Card -->
         <div class="bg-white rounded-lg shadow-lg p-6">
             <div class="flex items-center justify-center mb-4">
-                <img src="https://website-v3-assets.s3.amazonaws.com/assets/img/hero/Paystack-mark-white-twitter.png" 
-                     alt="Paystack Logo" 
-                     class="h-24 rounded-lg">
+                <img src="https://website-v3-assets.s3.amazonaws.com/assets/img/hero/Paystack-mark-white-twitter.png"
+                    alt="Paystack Logo" class="h-24 rounded-lg">
             </div>
             <h2 class="text-2xl font-bold text-center mb-4 text-accent-content">Instant Deposit with Paystack</h2>
             <p class="text-zinc-600 mb-6 text-center">
                 Make instant deposits securely using Paystack payment gateway
             </p>
             <div class="flex justify-center">
-                <button wire:click="depositPaystack" 
-                        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full">
+                <button wire:click="depositPaystack"
+                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full">
                     Deposit Now
                 </button>
-                 {{-- <a href="{{ route('deposits.paystack') }}" 
+                {{-- <a href="{{ route('deposits.paystack') }}" 
                         class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full">
                     Deposit Now
                 </a> --}}
             </div>
         </div>
-    <!-- Wema Bank Card -->
-    <div class="bg-white rounded-lg shadow-lg p-6 hidden">
-        <div class="flex items-center justify-center mb-4">
-            <img src="https://tse1.mm.bing.net/th/id/OIP.25RAYaTjaAa5Yq9KzPYbNwHaFk?rs=1&pid=ImgDetMain&o=7&rm=3" 
-                 alt="Wema Bank Logo" 
-                 class="h-24 rounded-lg">
-        </div>
-        <h2 class="text-2xl font-bold text-center mb-4 text-accent-content">Deposit with Wema Bank</h2>
-        <p class="text-zinc-600 mb-6 text-center">
-            Make direct bank transfers to your Wema Bank account
-        </p>
-        <div class="flex justify-center">
-            <button wire:click="depositWema"
-                    class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-6 rounded-full">
-                Get Account Details
-            </button>
+        <!-- OPay Card -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex items-center justify-center mb-4">
+                <img src="https://tse3.mm.bing.net/th/id/OIP.sotJOgk9mHTGGw-c8Tc08QHaHC?rs=1&pid=ImgDetMain&o=7&rm=3"
+                    alt="OPay Logo" class="h-24 rounded-lg">
+            </div>
+            <h2 class="text-2xl font-bold text-center mb-4 text-accent-content">Deposit with OPay</h2>
+            <p class="text-zinc-600 mb-6 text-center">
+                Make instant deposits using your OPay wallet
+            </p>
+            <div class="flex justify-center">
+                <button wire:click="depositOpay"
+                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full">
+                    Pay with OPay
+                </button>
+            </div>
         </div>
     </div>
-</div>

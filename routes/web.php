@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OpayController;
 use App\Http\Controllers\PaystackController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -104,6 +105,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Paystack Routes
     Route::get('/paystack/callback', [PaystackController::class, 'handleCallback'])->name('paystack.callback');
+    // opay webhook callback (server-to-server)
+    Route::post('/opay/callback', [OpayController::class, 'handleCallback'])->name('opay.callback');
 });
 
 require __DIR__ . '/auth.php';
