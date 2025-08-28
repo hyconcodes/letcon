@@ -129,9 +129,7 @@
         <div class="container mx-auto px-4">
             <div class="text-center space-y-4 mb-16">
                 <h2 class="text-4xl font-bold text-letcon-neutral-900">Why Choose Letcon</h2>
-                <p class="text-xl text-letcon-neutral-700 max-w-3xl mx-auto">
-                    Join the world's first digital contribution company implementing an automated control system based on pyramid progression patterns. Experience a revolutionary approach to financial growth through our innovative platform.
-                </p>
+                
             </div>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">

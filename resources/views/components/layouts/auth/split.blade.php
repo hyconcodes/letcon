@@ -15,7 +15,7 @@
                 <span class="flex h-10 w-10 items-center justify-center rounded-md">
                     <x-app-logo-icon class="me-2 h-7 fill-current text-white" />
                 </span>
-                {{ config('app.name', 'Laravel') }}
+                {{ config('app.name', 'letcon') }}
             </a>
             <div class="relative z-20 flex-grow mt-8">
                 <div class="relative">
@@ -25,17 +25,17 @@
                         <div class="text-center">
                             @php
                                 $systemQuotes = [
-                                    "Join the world's first automated progression system",
-                                    "Experience the future of digital contribution",
-                                    "Be part of the revolutionary pyramid progression pattern",
-                                    "Smart automation meets systematic growth",
-                                    "Leading the way in automated control systems"
+                                    "Shop Smart, Live Better",
+                                    "Your Success, Our Priority",
+                                    "Building Wealth Through Smart Commerce",
+                                    "Where Shopping Meets Financial Freedom",
+                                    "Empowering Your Business Journey"
                                 ];
                                 $message = $systemQuotes[array_rand($systemQuotes)];
                             @endphp
-                            <h2 class="text-3xl font-bold text-white mb-2">Welcome to Innovation!</h2>
-                            <p class="text-lg text-white">THE FIRST DIGITAL CONTRIBUTION COMPANY</p>
-                            <p class="text-lg text-white">WITH AUTOMATED CONTROL SYSTEM</p>
+                            <h2 class="text-3xl font-bold text-white mb-2">Welcome to Success!</h2>
+                            <p class="text-lg text-white">TRANSFORMING COMMERCE & FINANCE</p>
+                            <p class="text-lg text-white">EMPOWERING ENTREPRENEURS</p>
                             <br>
                             <p class="text-lg text-white">&ldquo;{{ $message }}&rdquo;</p>
                         </div>
@@ -45,14 +45,14 @@
             <div class="relative z-20 mt-auto">
                 <div class="space-y-2 text-center">
                     <flux:heading size="lg" class="text-2xl font-bold" tag="h1">
-                        Innovative Digital Wealth Building Platform | Automated Investment System
+                        Smart Commerce | Financial Empowerment
                     </flux:heading>
                     <div class="mt-4">
                         <flux:heading class="text-lg opacity-90" tag="h2">
-                            Transform your financial future with Letcon's revolutionary automated investment platform. Our secure, transparent digital contribution system helps you build wealth through smart technology and systematic progression.
+                            Join our thriving marketplace where business meets financial growth. We provide cutting-edge tools and resources to help you build, scale, and manage your online business while maximizing your financial potential.
                         </flux:heading>
-                        <meta name="description" content="Letcon - Leading automated investment platform offering digital wealth building solutions through smart technology and systematic progression. Join our innovative financial ecosystem today.">
-                        <meta name="keywords" content="automated investment, digital wealth building, smart investment platform, financial technology, systematic progression, automated control system">
+                        <meta name="description" content="Premier e-commerce platform offering comprehensive business solutions and financial empowerment tools. Join our community of successful entrepreneurs and unlock your business potential today.">
+                        <meta name="keywords" content="e-commerce platform, financial empowerment, online business, digital marketplace, business growth, entrepreneurship, smart commerce">
                     </div>
                 </div>
             </div>
