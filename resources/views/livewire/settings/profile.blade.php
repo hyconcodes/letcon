@@ -133,7 +133,7 @@ new class extends Component {
             'city' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20'],
-            'temp_picture' => ['nullable', 'image', 'max:1024'], // 1MB Max
+            'temp_picture' => ['nullable', 'image', 'max:5024'], // 1MB Max
             'postal_code' => ['required', 'string', 'max:20'],
         ]);
 
