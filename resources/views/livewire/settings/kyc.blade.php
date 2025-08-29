@@ -135,7 +135,7 @@ new class extends Component {
                     <div class="space-y-2">
                         @if ($kyc_image)
                             <div class="relative group">
-                                <img src="{{ storage_asset($kyc_image) }}" alt="KYC Document"
+                                <img src="{{ asset('storage/app/public/' . $kyc_image) }}" alt="KYC Document"
                                     class="w-full h-full object-cover cursor-pointer rounded" wire:click="toggleModal">
                                 <div
                                     class="absolute inset-0 bg-green-100 bg-opacity-75 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded flex items-center justify-center">
@@ -167,7 +167,7 @@ new class extends Component {
         <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
             wire:click="toggleModal">
             <div class="bg-white p-4 rounded-lg max-w-4xl max-h-[90vh] overflow-auto">
-                <img src="{{ storage_asset($kyc_image) }}" alt="KYC Document" class="max-w-full">
+                <img src="{{ asset('storage/app/public/' . $kyc_image) }}" alt="KYC Document" class="max-w-full">
                 <div class="mt-4 bg-green-100 p-3 rounded">
                     <p class="font-medium">{{ __(strtoupper(str_replace('_', ' ', $kyc_type))) }}</p>
                     <p class="text-sm">{{ $kyc_id }}</p>
