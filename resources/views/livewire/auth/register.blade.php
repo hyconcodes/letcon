@@ -31,24 +31,48 @@ new #[Layout('components.layouts.auth')] class extends Component {
             'ref_code' => ['nullable', 'string']
         ]);
 
+        $referrer = null;
+        $useOldestUserLogic = false;
+
         if ($this->ref_code) {
-            $referrer = User::where('referral_code', $this->ref_code)->first();
+            $potentialReferrer = User::where('referral_code', $this->ref_code)->first();
             
-            if (!$referrer) {
+            if (!$potentialReferrer) {
                 $this->addError('ref_code', 'Invalid referral code. Please check and try again.');
                 return;
             }
 
-            $referralCount = $referrer->referrals()->count();
-            if ($referralCount >= 4) {
-                // Instead of showing error, get the oldest user with less than 4 referrals
-                $referrer = User::role('member')
-                    ->where('id', '!=', 1)
-                    ->withCount('referrals')
-                    ->having('referrals_count', '<', 4)
-                    ->orderBy('created_at', 'asc')
-                    ->first();
+            // Check if the referrer has made a payment of 20,000 with status "paid"
+            $hasValidPayment = $potentialReferrer->payments()
+                ->where('amount', '>=', 20000)
+                ->where('status', 'paid')
+                ->exists();
+
+            if (!$hasValidPayment) {
+                // Don't show error, just use oldest user logic
+                $useOldestUserLogic = true;
+            } else {
+                $referralCount = $potentialReferrer->referrals()->count();
+                if ($referralCount >= 4) {
+                    // If referrer has 4+ referrals, use oldest user logic
+                    $useOldestUserLogic = true;
+                } else {
+                    // Valid referrer with payment and less than 4 referrals
+                    $referrer = $potentialReferrer;
+                }
             }
+        } else {
+            $useOldestUserLogic = true;
+        }
+
+        // If we need to use oldest user logic
+        if ($useOldestUserLogic) {
+            $referrer = User::role('member')
+                ->where('id', '!=', 1)
+                ->withCount('referrals')
+                ->having('referrals_count', '<', 4)
+                ->orderBy('created_at', 'asc')
+                ->first();
         }
 
         $validated['password'] = Hash::make($validated['password']);
@@ -62,34 +86,14 @@ new #[Layout('components.layouts.auth')] class extends Component {
         // Check if this is the first member user
         $isFirstMember = User::role('member')->count() === 1;
 
-        if (!$isFirstMember) {
-            if ($this->ref_code && isset($referrer)) {
-                $user->referred_by = $referrer->id;
-                $user->save();
+        if (!$isFirstMember && $referrer) {
+            $user->referred_by = $referrer->id;
+            $user->save();
 
-                Referral::create([
-                    'referrer_id' => $referrer->id,
-                    'referred_id' => $user->id,
-                ]);
-            } else {
-                // Get the oldest user with less than 4 referrals, excluding user with ID 1
-                $referrer = User::role('member')
-                    ->where('id', '!=', 1)
-                    ->withCount('referrals')
-                    ->having('referrals_count', '<', 4)
-                    ->orderBy('created_at', 'asc')
-                    ->first();
-
-                if ($referrer) {
-                    $user->referred_by = $referrer->id;
-                    $user->save();
-
-                    Referral::create([
-                        'referrer_id' => $referrer->id,
-                        'referred_id' => $user->id,
-                    ]);
-                }
-            }
+            Referral::create([
+                'referrer_id' => $referrer->id,
+                'referred_id' => $user->id,
+            ]);
         }
 
         event(new Registered($user));

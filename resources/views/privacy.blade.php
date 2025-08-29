@@ -63,15 +63,15 @@
         <!-- Background Image with Overlay -->
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style="background-image: url('{{ asset('assets/people-1.webp') }}')"></div>
-        <div class="absolute inset-0 bg-letcon-primary opacity-40"></div>
-        <div class="absolute inset-0 bg-letcon-gold opacity-20"></div>
+        <div class="absolute inset-0 bg-letcon-primary opacity-30"></div>
+        {{-- <div class="absolute inset-0 bg-letcon-gold opacity-20"></div> --}}
 
         <div class="container mx-auto px-4 relative z-10">
             <div class="text-center mb-16">
-                <h1 class="text-4xl lg:text-5xl font-bold text-letcon-neutral-900 mb-4">
+                <h1 class="text-4xl lg:text-5xl font-bold text-letcon-primary mb-4">
                     Privacy Policy
                 </h1>
-                <p class="text-xl text-letcon-neutral-700">
+                <p class="text-xl text-white">
                     At Letcon, your privacy is very important to us. This Privacy Policy explains how we collect, use,
                     store, and protect your information.
                 </p>

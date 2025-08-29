@@ -74,82 +74,84 @@ new class extends Component {
 
     public function depositOpay()
     {
-        try {
-            // Check if user has already made one-time payment
-            $existingPayment = App\Models\Payment::where('user_id', auth()->id())
-                ->where('status', 'paid')
-                ->first();
+        session()->flash('error', 'OPay payment is not available at the moment. Please try other method.');
+        return redirect()->back();
+        // try {
+        //     // Check if user has already made one-time payment
+        //     $existingPayment = App\Models\Payment::where('user_id', auth()->id())
+        //         ->where('status', 'paid')
+        //         ->first();
 
-            if ($existingPayment) {
-                session()->flash('error', 'You have already made the one-time payment.');
-                return redirect()->back();
-            }
+        //     if ($existingPayment) {
+        //         session()->flash('error', 'You have already made the one-time payment.');
+        //         return redirect()->back();
+        //     }
 
-            $reference = Str::uuid()->toString();
+        //     $reference = Str::uuid()->toString();
 
-            $data = [
-                'country' => 'NG',
-                'reference' => $reference,
-                'amount' => [
-                    'total' => 20000 * 100,
-                    'currency' => 'NGN',
-                ],
-                'returnUrl' => route('wallets'),
-                'callbackUrl' => route('opay.callback'),
-                // 'cancelUrl' => route('opay.cancel'),
-                'evokeOpay' => true,
-                'customerVisitSource' => 'WEB',
-                'expireAt' => 30,
-                'userInfo' => [
-                    'userEmail' => auth()->user()->email,
-                    'userId' => auth()->id(),
-                    'userMobile' => auth()->user()->phone ?? '',
-                    'userName' => auth()->user()->name,
-                ],
-                'product' => [
-                    'name' => 'Level 1 Contribution',
-                    'description' => 'Letcon one-time deposit payment',
-                ],
-                // 'payMethod' => 'BankCard',
-            ];
+        //     $data = [
+        //         'country' => 'NG',
+        //         'reference' => $reference,
+        //         'amount' => [
+        //             'total' => 20000 * 100,
+        //             'currency' => 'NGN',
+        //         ],
+        //         'returnUrl' => route('wallets'),
+        //         'callbackUrl' => route('opay.callback'),
+        //         // 'cancelUrl' => route('opay.cancel'),
+        //         'evokeOpay' => true,
+        //         'customerVisitSource' => 'WEB',
+        //         'expireAt' => 30,
+        //         'userInfo' => [
+        //             'userEmail' => auth()->user()->email,
+        //             'userId' => auth()->id(),
+        //             'userMobile' => auth()->user()->phone ?? '',
+        //             'userName' => auth()->user()->name,
+        //         ],
+        //         'product' => [
+        //             'name' => 'Level 1 Contribution',
+        //             'description' => 'Letcon one-time deposit payment',
+        //         ],
+        //         // 'payMethod' => 'BankCard',
+        //     ];
 
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Bearer ' . env('OPAY_PUBLIC_KEY'),
-                'MerchantId' => env('OPAY_MERCHANT_ID'),
-            ])->post('https://testapi.opaycheckout.com/api/v1/international/cashier/create', $data);
+        //     $response = Http::withHeaders([
+        //         'Content-Type' => 'application/json',
+        //         'Authorization' => 'Bearer ' . env('OPAY_PUBLIC_KEY'),
+        //         'MerchantId' => env('OPAY_MERCHANT_ID'),
+        //     ])->post('https://testapi.opaycheckout.com/api/v1/international/cashier/create', $data);
 
-            $result = $response->json();
+        //     $result = $response->json();
 
-            if ($response->successful() && isset($result['data']['cashierUrl'])) {
-                // Store transaction reference
-                session(['opay_reference' => $reference]);
+        //     if ($response->successful() && isset($result['data']['cashierUrl'])) {
+        //         // Store transaction reference
+        //         session(['opay_reference' => $reference]);
 
-                // Redirect to OPay checkout page
-                return redirect()->away($result['data']['cashierUrl']);
-            }
+        //         // Redirect to OPay checkout page
+        //         return redirect()->away($result['data']['cashierUrl']);
+        //     }
 
-            // If cashierUrl is missing, log an error
-            \Log::error('OPay payment initialization failed', [
-                'user_id' => auth()->id(),
-                'reference' => $reference,
-                'response' => $result,
-            ]);
+        //     // If cashierUrl is missing, log an error
+        //     \Log::error('OPay payment initialization failed', [
+        //         'user_id' => auth()->id(),
+        //         'reference' => $reference,
+        //         'response' => $result,
+        //     ]);
 
-            session()->flash('error', 'We encountered an issue processing your payment. Please try again.');
-            return redirect()->back();
-        } catch (\Exception $e) {
-            // Log detailed error information
-            \Log::error('OPay payment initialization failed: ' . $e->getMessage(), [
-                'user_id' => auth()->id(),
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'reference' => $reference ?? null,
-            ]);
+        //     session()->flash('error', 'We encountered an issue processing your payment. Please try again.');
+        //     return redirect()->back();
+        // } catch (\Exception $e) {
+        //     // Log detailed error information
+        //     \Log::error('OPay payment initialization failed: ' . $e->getMessage(), [
+        //         'user_id' => auth()->id(),
+        //         'error' => $e->getMessage(),
+        //         'trace' => $e->getTraceAsString(),
+        //         'reference' => $reference ?? null,
+        //     ]);
 
-            session()->flash('error', 'We\'re currently experiencing technical difficulties with our payment system. Please try again later.');
-            return redirect()->back();
-        }
+        //     session()->flash('error', 'We\'re currently experiencing technical difficulties with our payment system. Please try again later.');
+        //     return redirect()->back();
+        // }
     }
 }; ?>
 

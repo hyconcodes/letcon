@@ -63,7 +63,7 @@
             style="background-image: url('{{ asset('assets/people-1.webp') }}')"></div>
 
         <!-- Green overlay -->
-        {{-- <div class="absolute inset-0 bg-letcon-primary opacity-40"></div> --}}
+        <div class="absolute inset-0 bg-letcon-primary opacity-30"></div>
 
         {{-- <!-- Gold overlay -->
         <div class="absolute inset-0 bg-letcon-gold opacity-20"></div> --}}
@@ -225,9 +225,7 @@
                                     Unlock Your E-Commerce & Financial Potential
                                 </h2>
                                 <p class="text-xl text-letcon-neutral-700 max-w-2xl mx-auto">
-                                    Join Letcon's innovative marketplace platform to access powerful e-commerce tools, 
-                                    financial growth opportunities, and a supportive global community. Start your 
-                                    journey to financial success through digital commerce today.
+                                    Join Letcon's innovative platform to access powerful e-commerce tools, financial growth opportunities, and a supportive global community. Start your journey to financial success through Digitalised Contribution today.
                                 </p>
                             </div>
 
@@ -269,7 +267,7 @@
                                             </path>
                                         </svg>
                                     </div>
-                                    <h3 class="font-semibold text-letcon-neutral-900">Zero Risk</h3>
+                                    <h3 class="font-semibold text-letcon-neutral-900">Low Risk</h3>
                                    
                                 </div>
                                 <div class="text-center space-y-3">

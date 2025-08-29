@@ -62,8 +62,8 @@
         <!-- Background Image with Overlay -->
         <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style="background-image: url('{{ asset('assets/people-1.webp') }}')"></div>
-        <div class="absolute inset-0 bg-letcon-primary opacity-40"></div>
-        <div class="absolute inset-0 bg-letcon-gold opacity-20"></div>
+        <div class="absolute inset-0 bg-letcon-primary opacity-30"></div>
+        {{-- <div class="absolute inset-0 bg-letcon-gold opacity-20"></div> --}}
 
         <div class="container mx-auto px-4 relative z-10">
             <div class="text-center mb-16">
