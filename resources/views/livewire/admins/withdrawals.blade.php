@@ -280,7 +280,7 @@ new class extends Component {
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">KYC Image</label>
                     @if($selectedKYC->kyc_image)
-                        <img src="{{ asset('storage/' . $selectedKYC->kyc_image) }}" alt="KYC Image" class="mt-2 max-w-full h-auto rounded-lg">
+                        <img src="{{ storage_asset($selectedKYC->kyc_image) }}" alt="KYC Image" class="mt-2 max-w-full h-auto rounded-lg">
                     @else
                         <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">No image provided</div>
                     @endif

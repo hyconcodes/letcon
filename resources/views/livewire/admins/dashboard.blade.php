@@ -64,7 +64,7 @@ new class extends Component {
                     <p class="text-sm opacity-75">Total Members</p>
                     <p class="text-2xl font-bold">{{ $this->getMemberCount() }}</p>
                 </div>
-                <a href="{{ route('members') }}" class="rounded-lg text-white bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View All</a>
+                <a href="{{ route('users') }}" class="rounded-lg text-white bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View All</a>
             </div>
 
             <!-- Total Agents Card -->

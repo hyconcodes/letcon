@@ -63,7 +63,7 @@
             style="background-image: url('{{ asset('assets/people-1.webp') }}')"></div>
 
         <!-- Green overlay -->
-        <div class="absolute inset-0 bg-letcon-primary opacity-30"></div>
+        {{-- <div class="absolute inset-0 bg-letcon-primary opacity-30"></div> --}}
 
         {{-- <!-- Gold overlay -->
         <div class="absolute inset-0 bg-letcon-gold opacity-20"></div> --}}
@@ -73,8 +73,7 @@
                 <div class="space-y-8">
                     <div class="space-y-4">
                         <h1 class="text-5xl lg:text-6xl font-bold text-white leading-tight">
-                            "One hand cannot lift a load onto the head."
-                            <span class="gradient-hero bg-clip-text text-transparent">Cooperation is necessary to achieve big tasks</span>
+                            <span class="gradient-hero bg-clip-text text-transparent">"One hand cannot lift a load onto the head." Cooperation is necessary to achieve big tasks</span>
                         </h1>
                         
                     </div>

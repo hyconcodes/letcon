@@ -214,7 +214,7 @@ new class extends Component {
             <div class="flex flex-col items-center">
                 @if ($picture)
                     <div class="mb-4">
-                        <img src="{{ asset('storage/' . $picture) }}" alt="Profile Picture"
+                        <img src="{{ storage_asset($picture) }}" alt="Profile Picture"
                             class="w-32 h-32 rounded-full object-cover">
                     </div>
                 @endif
