@@ -123,7 +123,7 @@ new class extends Component {
                             {{ $earning->description }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-accent-content dark:text-accent-content">
-                            ${{ number_format($earning->amount, 2) }}
+                            ₦{{ number_format($earning->amount, 2) }}
                         </td>
                     </tr>
                 @empty

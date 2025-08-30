@@ -10,6 +10,8 @@ new class extends Component {
     public $levelFilter = '';
     public $totalUsers;
     public $filteredUsers;
+    public $userToDelete = null;
+    public $showDeleteModal = false;
 
     public function mount()
     {
@@ -43,14 +45,27 @@ new class extends Component {
         $this->filteredUsers = $this->users->count();
     }
 
-    public function deleteUser($userId)
+    public function confirmDelete($userId)
     {
-        $user = User::find($userId);
-        if ($user) {
-            $user->delete();
+        $this->userToDelete = User::find($userId);
+        $this->showDeleteModal = true;
+    }
+
+    public function deleteUser()
+    {
+        if ($this->userToDelete) {
+            $this->userToDelete->delete();
             session()->flash('message', 'User deleted successfully.');
+            $this->showDeleteModal = false;
+            $this->userToDelete = null;
             $this->refreshUsers();
         }
+    }
+
+    public function cancelDelete()
+    {
+        $this->showDeleteModal = false;
+        $this->userToDelete = null;
     }
 
     public function updatedSearch()
@@ -115,7 +130,7 @@ new class extends Component {
                                 <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         @if ($user->picture)
-                                            <img class="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover" src="{{ $user->picture }}" alt="{{ $user->name }}">
+                                            <img class="h-8 w-8 sm:h-10 sm:w-10 rounded-full object-cover" src="{{ asset('storage/app/public/' . $user->picture) }}" alt="{{ $user->name }}">
                                         @else
                                             <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-secondary-200 dark:bg-secondary-700 flex items-center justify-center">
                                                 <svg class="h-5 w-5 sm:h-6 sm:w-6 text-secondary-500 dark:text-secondary-400" fill="currentColor" viewBox="0 0 24 24">
@@ -138,7 +153,7 @@ new class extends Component {
                                     </div>
                                 </td>
                                 <td class="px-3 sm:px-6 py-2 sm:py-4">
-                                    <button wire:click="deleteUser({{ $user->id }})" class="text-red-600 hover:text-red-900">
+                                    <button wire:click="confirmDelete({{ $user->id }})" class="text-red-600 hover:text-red-900">
                                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                         </svg>
@@ -151,4 +166,21 @@ new class extends Component {
             </div>
         </div>
     </div>
+
+    @if($showDeleteModal)
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center">
+        <div class="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-sm mx-4">
+            <h3 class="text-lg font-medium text-secondary-900 dark:text-white mb-4">Confirm Delete</h3>
+            <p class="text-secondary-500 dark:text-secondary-400 mb-4">Are you sure you want to delete {{ $userToDelete->name }}? This action cannot be undone.</p>
+            <div class="flex justify-end gap-3">
+                <button wire:click="cancelDelete" class="px-4 py-2 text-sm font-medium text-secondary-700 bg-white border border-secondary-300 rounded-md hover:bg-secondary-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                    Cancel
+                </button>
+                <button wire:click="deleteUser" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
 </div>

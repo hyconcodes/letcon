@@ -102,6 +102,7 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/password', 'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
     Volt::route('settings/kyc-sys', 'settings.kyc')->name('settings.kyc');
+    Volt::route('settings/organization-kyc-sys', 'settings.org_kyc')->name('settings.org.kyc');
 
     // Paystack Routes
     Route::get('/paystack/callback', [PaystackController::class, 'handleCallback'])->name('paystack.callback');

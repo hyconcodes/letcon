@@ -21,7 +21,7 @@ new class extends Component {
         }
 
         // Check KYC verification
-        if (!$this->user->kyc_type || !$this->user->kyc_id || !$this->user->kyc_image) {
+        if (!$this->user->kyc_image) {
             $this->notification = [
                 'type' => 'error',
                 'message' => 'Please complete your KYC verification before making a withdrawal.',
@@ -49,7 +49,7 @@ new class extends Component {
         }
 
         // Check KYC verification
-        if (!$this->user->kyc_type || !$this->user->kyc_id || !$this->user->kyc_image) {
+        if (!$this->user->kyc_image) {
             $this->notification = [
                 'type' => 'error',
                 'message' => 'Please complete your KYC verification before making a withdrawal.',

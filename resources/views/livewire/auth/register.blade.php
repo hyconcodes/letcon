@@ -17,6 +17,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
     public string $password = '';
     public string $password_confirmation = '';
     public string $ref_code = '';
+    public string $user_type = 'individual';
 
     /**
      * Handle an incoming registration request.
@@ -28,7 +29,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'username' => ['required', 'string', 'lowercase', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
-            'ref_code' => ['nullable', 'string']
+            'ref_code' => ['nullable', 'string'],
+            'user_type' => ['required', 'in:individual,organization'],
         ]);
 
         $referrer = null;
@@ -165,6 +167,23 @@ new #[Layout('components.layouts.auth')] class extends Component {
             :placeholder="__('Confirm password')"
             viewable
         />
+
+        <!-- User Type Selection -->
+        <div class="flex flex-col gap-2">
+            <label class="block font-medium text-sm text-zinc-700 dark:text-zinc-300">
+                {{ __('Account Type') }}
+            </label>
+            <div class="flex gap-4">
+                <label class="inline-flex items-center">
+                    <input type="radio" wire:model="user_type" value="individual" class="form-radio" required>
+                    <span class="ml-2">{{ __('Individual') }}</span>
+                </label>
+                <label class="inline-flex items-center">
+                    <input type="radio" wire:model="user_type" value="organization" class="form-radio" required>
+                    <span class="ml-2">{{ __('Organization') }}</span>
+                </label>
+            </div>
+        </div>
 
         <!-- Referral Code -->
         <flux:input

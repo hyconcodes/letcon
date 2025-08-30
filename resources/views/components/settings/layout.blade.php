@@ -4,7 +4,11 @@
             <flux:navlist.item :href="route('settings.profile')" wire:navigate>{{ __('Profile') }}</flux:navlist.item>
             <flux:navlist.item :href="route('settings.password')" wire:navigate>{{ __('Password') }}</flux:navlist.item>
             <flux:navlist.item :href="route('settings.appearance')" wire:navigate>{{ __('Appearance') }}</flux:navlist.item>
-            <flux:navlist.item :href="route('settings.kyc')" wire:navigate>{{ __('KYC') }}</flux:navlist.item>
+            @if(auth()->user()->user_type === 'individual')
+                <flux:navlist.item :href="route('settings.kyc')" wire:navigate>{{ __('KYC') }}</flux:navlist.item>
+            @elseif(auth()->user()->user_type === 'organization') 
+                <flux:navlist.item :href="route('settings.org.kyc')" wire:navigate>{{ __('KYC') }}</flux:navlist.item>
+            @endif
         </flux:navlist>
     </div>
 

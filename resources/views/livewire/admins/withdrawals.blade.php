@@ -89,6 +89,14 @@ new class extends Component {
                 'status' => $status === 'approve' ? 'approved' : ($status === 'reject' ? 'rejected' : 'pending'),
                 'comment' => $requireComment ? $this->comment : $withdrawal->comment
             ]);
+
+            // If status is reject, return the money to user's earned balance
+            if ($status === 'reject') {
+                $user = $withdrawal->user;
+                $user->wallet->decrement('pending_withdraw', $withdrawal->amount);
+                $user->wallet->increment('earned_balance', $withdrawal->amount);
+            }
+
             $this->notification = ['type' => 'success', 'message' => 'Status updated successfully'];
         }
 
@@ -207,13 +215,13 @@ new class extends Component {
                                             Reject
                                         </button>
                                         @endcan
-                                    @elseif($withdrawal->status === 'rejected')
+                                    {{-- @elseif($withdrawal->status === 'rejected')
                                         <button 
                                             wire:click="updateStatus({{ $withdrawal->id }}, 'pending')"
                                             class="text-sm bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600 mr-2"
                                         >
                                             Move to Pending
-                                        </button>
+                                        </button> --}}
                                     @endif
                                     <button 
                                         wire:click="viewKYC({{ $withdrawal->user_id }})"
@@ -265,26 +273,51 @@ new class extends Component {
         <div class="bg-white dark:bg-zinc-800 p-6 rounded-lg w-96">
             <h3 class="text-lg font-medium mb-4">KYC Information</h3>
             <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">KYC Type</label>
-                    <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                        {{ strtoupper($selectedKYC->kyc_type) ?? 'Not provided' }}
+                @if($selectedKYC->user_type === 'organization')
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Organization Name</label>
+                        <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                            {{ $selectedKYC->name }}
+                        </div>
                     </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">KYC ID</label>
-                    <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">
-                        {{ $selectedKYC->kyc_id ?? 'Not provided' }}
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Organization Image</label>
+                        @if($selectedKYC->kyc_org_image)
+                            <img src="{{ asset('storage/' . $selectedKYC->kyc_org_image) }}" alt="Organization KYC Image" class="mt-2 max-w-full h-auto rounded-lg">
+                        @else
+                            <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">No organization image provided</div>
+                        @endif
                     </div>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">KYC Image</label>
-                    @if($selectedKYC->kyc_image)
-                        <img src="{{ asset('storage/app/public/' . $selectedKYC->kyc_image) }}" alt="KYC Image" class="mt-2 max-w-full h-auto rounded-lg">
-                    @else
-                        <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">No image provided</div>
-                    @endif
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Initiator KYC ID Image</label>
+                        @if($selectedKYC->kyc_image)
+                            <img src="{{ asset('storage/' . $selectedKYC->kyc_image) }}" alt="Personal KYC Image" class="mt-2 max-w-full h-auto rounded-lg">
+                        @else
+                            <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">No personal image provided</div>
+                        @endif
+                    </div>
+                @else
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">KYC Type</label>
+                        <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                            {{ strtoupper($selectedKYC->kyc_type) ?? 'Not provided' }}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">KYC ID</label>
+                        <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">
+                            {{ $selectedKYC->kyc_id ?? 'Not provided' }}
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">KYC Image</label>
+                        @if($selectedKYC->kyc_image)
+                            <img src="{{ asset('storage/app/public/' . $selectedKYC->kyc_image) }}" alt="KYC Image" class="mt-2 max-w-full h-auto rounded-lg">
+                        @else
+                            <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">No image provided</div>
+                        @endif
+                    </div>
+                @endif
             </div>
             <div class="mt-6 flex justify-end">
                 <button 

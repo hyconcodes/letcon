@@ -134,9 +134,10 @@
                 </svg>
                 <div class="mb-4">
                     <p class="text-sm opacity-75">Reject Withdraw</p>
-                    <p class="text-1xl font-bold">₦0.00</p>
+                    <p class="text-1xl font-bold"></p>
                 </div>
-                {{-- <button class="rounded-lg bg-white/20 px-3 py-1 text-sm hover:bg-white/30">View</button> --}}
+                <a href="{{ route('withdrawal.log') }}"
+                    class="rounded-lg bg-white/20 px-3 py-1 text-sm text-white hover:bg-white/30">View</a>
             </div>
         </div>
 

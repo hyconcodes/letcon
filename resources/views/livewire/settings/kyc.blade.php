@@ -17,6 +17,9 @@ new class extends Component {
     public function mount()
     {
         $user = auth()->user();
+        if ($user->user_type !== 'individual') {
+            abort(403);
+        }
         $this->kyc_type = $user->kyc_type;
         $this->kyc_id = $user->kyc_id;
         $this->kyc_image = $user->kyc_image;
@@ -31,8 +34,14 @@ new class extends Component {
     {
         $validationRules = [
             'kyc_type' => 'required|in:nin,voters_card,driver_license,passport',
-            'kyc_id' => 'required|string|min:6',
+            'kyc_id' => 'required|string|min:6|unique:users,kyc_id,' . auth()->id(),
         ];
+
+        $customMessages = [
+            'kyc_id.unique' => 'This BVN number is already been use for validation by another user.',
+        ];
+
+        $this->validate($validationRules, $customMessages);
 
         // Only validate image if it's a new file upload (not an existing path string)
         if ($this->kyc_image && is_object($this->kyc_image)) {
@@ -105,19 +114,19 @@ new class extends Component {
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">{{ __('ID Number') }}</label>
-                        <flux:input type="text" wire:model="kyc_id"
-                            class="w-full rounded-md border-zinc-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
-                            placeholder="{{ __('Enter your ID number') }}" />
-                        @error('kyc_id')
+                        <label class="block text-sm font-medium mb-2">{{ __('ID Document Image') }}</label>
+                        <flux:input type="file" wire:model="kyc_image" class="w-full" accept="image/*" />
+                        @error('kyc_image')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">{{ __('ID Document Image') }}</label>
-                        <flux:input type="file" wire:model="kyc_image" class="w-full" accept="image/*" />
-                        @error('kyc_image')
+                        <label class="block text-sm font-medium mb-2">{{ __('BVN Number') }}</label>
+                        <flux:input type="text" wire:model="kyc_id"
+                            class="w-full rounded-md border-zinc-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200"
+                            placeholder="{{ __('Enter your BVN number') }}" />
+                        @error('kyc_id')
                             <span class="text-red-600 text-sm">{{ $message }}</span>
                         @enderror
                     </div>
@@ -141,8 +150,8 @@ new class extends Component {
                                     class="absolute inset-0 bg-green-100 bg-opacity-75 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded flex items-center justify-center">
                                     <div class="text-center p-2">
                                         <p class="text-sm font-medium">
-                                            {{ __(strtoupper(str_replace('_', ' ', $kyc_type))) }}</p>
-                                        <p class="text-xs">{{ $kyc_id }}</p>
+                                            Type: {{ __(strtoupper(str_replace('_', ' ', $kyc_type))) }}</p>
+                                        <p class="text-xs">BVN: {{ $kyc_id }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -152,7 +161,7 @@ new class extends Component {
                             {{ __(strtoupper(str_replace('_', ' ', $kyc_type))) }}
                         </p>
                         <p class="text-sm text-zinc-600 dark:text-zinc-300">
-                            <span class="font-medium dark:text-zinc-200">{{ __('ID Number:') }}</span>
+                            <span class="font-medium dark:text-zinc-200">{{ __('BVN Number:') }}</span>
                             {{ $kyc_id }}
                         </p>
                     </div>
@@ -170,7 +179,7 @@ new class extends Component {
                 <img src="{{ asset('storage/app/public/' . $kyc_image) }}" alt="KYC Document" class="max-w-full">
                 <div class="mt-4 bg-green-100 p-3 rounded">
                     <p class="font-medium">{{ __(strtoupper(str_replace('_', ' ', $kyc_type))) }}</p>
-                    <p class="text-sm">{{ $kyc_id }}</p>
+                    <p class="text-sm">BVN: {{ $kyc_id }}</p>
                 </div>
             </div>
         </div>
