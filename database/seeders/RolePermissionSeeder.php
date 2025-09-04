@@ -25,7 +25,7 @@ class RolePermissionSeeder extends Seeder
         //     Role::create(['name' => $role]);
         // }
 
-        // $permissions = [
+        $permissions = [
         // 'view dashboard',
 
         // 'create.member',
@@ -69,11 +69,14 @@ class RolePermissionSeeder extends Seeder
         // 'create.withdrawal',
         // 'update.withdrawal',
         // 'delete.withdrawal',
-        // ];
 
-        // foreach ($permissions as $permission) {
-        //     Permission::create(['name' => $permission]);
-        // }
+        'record.payment',
+        'record.wallet',
+        ];
+
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
         // $admin = Role::findByName('super-admin');
         // $admin->givePermissionTo($permissions);
 
@@ -96,7 +99,7 @@ class RolePermissionSeeder extends Seeder
         //         'update.withdrawal',
         //         'delete.withdrawal',
 
-        Permission::findByName('pend.withdrawal')->update(['name' => 'pending.withdrawal']);
+        // Permission::findByName('pend.withdrawal')->update(['name' => 'pending.withdrawal']);
         // Permission::findByName('update.withdrawal')->update(['name' => 'approve.withdrawal']);
         // Permission::findByName('delete.withdrawal')->update(['name' => 'delete.withdrawal']);
         // Permission::create(['name' => 'reject.withdrawal']);

@@ -22,7 +22,7 @@ class DeleteMemberWithoutPaymentAfterThirtyMinute extends Command
      *
      * @var string
      */
-    protected $description = 'Delete users who have not paid 20,000 within 30 minutes of signup';
+    protected $description = 'Delete users who have not paid 20,000 within 1 hour of signup';
 
     /**
      * Execute the console command.
@@ -32,12 +32,12 @@ class DeleteMemberWithoutPaymentAfterThirtyMinute extends Command
         // Log start of command execution
         Log::info('Starting deletion of unpaid members');
 
-        // Calculate the timestamp for 30 minutes ago
-        $thirtyMinutesAgo = Carbon::now()->subMinutes(30);
-        Log::info('Checking users registered before: ' . $thirtyMinutesAgo);
+        // Calculate the timestamp for 1 hour ago
+        $oneHourAgo = Carbon::now()->subHour();
+        Log::info('Checking users registered before: ' . $oneHourAgo);
 
-        // Get users who registered more than 30 minutes ago
-        $users = User::where('created_at', '<=', $thirtyMinutesAgo)
+        // Get users who registered more than 1 hour ago
+        $users = User::where('created_at', '<=', $oneHourAgo)
             ->whereHas('roles', function ($query) {
                 $query->where('name', 'member');
                 Log::debug('Filtering users with member role');

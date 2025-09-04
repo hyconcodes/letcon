@@ -90,14 +90,10 @@ new class extends Component {
             return;
         }
 
-        // Calculate amount after 0.01% fee
-        $fee = $this->amount * 0.0001;
-        $finalAmount = $this->amount - $fee;
-
         // Create withdrawal request
         \App\Models\Withdrawal::create([
             'user_id' => $this->user->id,
-            'amount' => $finalAmount,
+            'amount' => $this->amount,
             'bank_name' => $this->user->bank_name,
             'bank_account_name' => $this->user->bank_account_name,
             'bank_account_number' => $this->user->bank_account_number,
@@ -107,7 +103,7 @@ new class extends Component {
         // Update wallet balances
         $this->wallet->update([
             'earned_balance' => $this->wallet->earned_balance - $this->amount,
-            'pending_withdraw' => $this->wallet->pending_withdraw + $finalAmount
+            'pending_withdraw' => $this->wallet->pending_withdraw + $this->amount
         ]);
 
         $this->notification = [
@@ -138,7 +134,6 @@ new class extends Component {
                 <ul class="list-disc ml-6 mt-2">
                     <li>Available Balance: ₦{{ number_format($wallet->earned_balance, 2) }}</li>
                     <li>Minimum: ₦1,000</li>
-                    <li>Charge: 0.01%</li>
                     <li>Processing Time: 24 hours</li>
                 </ul>
             </div>

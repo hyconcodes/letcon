@@ -12,26 +12,26 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     /* Letcon Global Color Palette */
-    --color-primary: #059669;     /* Emerald Green */
+    --color-primary: #0EA5E9;     /* Sky Blue */
     --color-secondary: #10B981;   /* Light Emerald */
     --color-text: #2E2E2E;        /* Charcoal */
     --color-light-bg: #F5F7FA;    /* Light Blue-Gray */
     --color-border: #B0B0B0;      /* Steel Gray */
-    --color-accent: #059669;      /* Emerald Accent */
+    --color-accent: #0EA5E9;      /* Sky Blue Accent */
     
-    /* Additional shades for primary (emerald) */
-    --color-primary-50: #ECFDF5;  /* Lightest emerald */
-    --color-primary-100: #D1FAE5;
-    --color-primary-200: #A7F3D0;
-    --color-primary-300: #6EE7B7;
-    --color-primary-400: #34D399;
-    --color-primary-500: #10B981; /* Base emerald */
-    --color-primary-600: #059669;
-    --color-primary-700: #047857;
-    --color-primary-800: #065F46;
-    --color-primary-900: #064E3B;
+    /* Additional shades for primary (sky blue) */
+    --color-primary-50: #F0F9FF;  /* Lightest sky */
+    --color-primary-100: #E0F2FE;
+    --color-primary-200: #BAE6FD;
+    --color-primary-300: #7DD3FC;
+    --color-primary-400: #38BDF8;
+    --color-primary-500: #0EA5E9; /* Base sky */
+    --color-primary-600: #0284C7;
+    --color-primary-700: #0369A1;
+    --color-primary-800: #075985;
+    --color-primary-900: #0C4A6E;
     
-    /* Additional shades for secondary (light emerald) */
+    /* Additional shades for secondary (emerald) */
     --color-secondary-50: #ECFDF5;
     --color-secondary-100: #D1FAE5;
     --color-secondary-200: #A7F3D0;
@@ -54,12 +54,12 @@
 
 @layer theme {
     .dark {
-        --color-primary: #34D399;      /* Lighter emerald for dark mode */
+        --color-primary: #38BDF8;      /* Lighter sky blue for dark mode */
         --color-secondary: #6EE7B7;    /* Pale emerald for dark mode */
         --color-text: #F5F5F5;         /* Light text for dark mode */
-        --color-light-bg: #065F46;     /* Dark emerald background */
-        --color-border: #10B981;       /* Emerald-tinted border for dark mode */
-        --color-accent: #34D399;       /* Light emerald accent for dark mode */
+        --color-light-bg: #075985;     /* Dark sky blue background */
+        --color-border: #0EA5E9;       /* Sky blue-tinted border for dark mode */
+        --color-accent: #38BDF8;       /* Light sky blue accent for dark mode */
         
         --color-accent-content: var(--color-primary);
         --color-accent-foreground: var(--color-secondary-900);
@@ -106,19 +106,19 @@ select:focus[data-flux-control] {
 
 /* Button styles */
 .btn-primary {
-    @apply bg-primary text-white font-medium py-2 px-4 rounded transition-colors;
+    @apply bg-gradient-to-r from-primary to-secondary text-white font-medium py-2 px-4 rounded transition-colors;
 }
 
 .btn-primary:hover {
-    @apply bg-primary-600;
+    @apply from-primary-600 to-secondary-600;
 }
 
 .btn-secondary {
-    @apply bg-secondary text-white font-medium py-2 px-4 rounded transition-colors;
+    @apply bg-gradient-to-r from-secondary to-primary text-white font-medium py-2 px-4 rounded transition-colors;
 }
 
 .btn-secondary:hover {
-    @apply bg-secondary-400;
+    @apply from-secondary-400 to-primary-400;
 }
 
 /* \[:where(&)\]:size-4 {

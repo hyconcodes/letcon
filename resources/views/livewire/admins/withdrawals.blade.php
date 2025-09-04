@@ -304,7 +304,7 @@ new class extends Component {
                         </div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">KYC ID</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">BVN</label>
                         <div class="mt-1 text-sm text-gray-900 dark:text-gray-100">
                             {{ $selectedKYC->kyc_id ?? 'Not provided' }}
                         </div>

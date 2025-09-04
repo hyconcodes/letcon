@@ -54,6 +54,11 @@
                         wire:navigate>{{ __('Manage Payments') }}</flux:navlist.item>
                 @endcanany
 
+                @canany(['record.payment', 'record.wallet'])
+                    <flux:navlist.item icon="document-currency-dollar" :href="route('admin.record-payment')" :current="request()->routeIs('admin.record-payment')"
+                        wire:navigate>{{ __('Record Payment') }}</flux:navlist.item>
+                @endcanany
+
                 @canany(['view.agent', 'create.agent', 'update.agent', 'delete.agent'])
                     <flux:navlist.item icon="user" :href="route('agents')" :current="request()->routeIs('agents')"
                         wire:navigate>{{ __('Manage Agents') }}</flux:navlist.item>

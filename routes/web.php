@@ -71,6 +71,10 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(['permission:view.withdrawal|pending.withdrawal|approve.withdrawal|reject.withdrawal|delete.withdrawal'])
         ->name('admin.withdrawals');
 
+    Volt::route('admin/record-payment-sys', 'admins.record-payment')
+        ->middleware(['permission:record.payment|record.wallet'])
+        ->name('admin.record-payment');
+
     // Member routes
     Volt::route('users/wallets-sys', 'users.wallets')
         ->middleware(['permission:view.wallet|fund.wallet|withdraw.wallet'])
