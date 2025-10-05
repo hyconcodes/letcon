@@ -22,37 +22,27 @@
                     <img src="{{ asset('assets/people-2.jpg') }}" alt="Background image"
                         class="h-full w-full object-cover rounded-lg opacity-60">
                     <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="text-center">
-                            @php
-                                $systemQuotes = [
-                                    "Shop Smart, Live Better",
-                                    "Your Success, Our Priority",
-                                    "Building Wealth Through Smart Commerce",
-                                    "Where Shopping Meets Financial Freedom",
-                                    "Empowering Your Business Journey"
-                                ];
-                                $message = $systemQuotes[array_rand($systemQuotes)];
-                            @endphp
-                            <h2 class="text-3xl font-bold text-white mb-2">Welcome to Success!</h2>
-                            <p class="text-lg text-white">TRANSFORMING COMMERCE & FINANCE</p>
-                            <p class="text-lg text-white">EMPOWERING ENTREPRENEURS</p>
-                            <br>
-                            <p class="text-lg text-white">&ldquo;{{ $message }}&rdquo;</p>
+                        <div class="text-center text-white space-y-3">
+                            <h2 class="text-2xl font-bold text-white mb-3">About Letcon Global</h2>
+                            <div class="space-y-2 text-sm leading-relaxed max-w-md mx-auto">
+                                <p><strong>Letcon Global Company Ltd</strong> is a Digitalised Cooperative System blending traditional African contribution systems (Ajo/Osusu) with modern financial technology.</p>
+
+                                <p>We provide a transparent, structured platform for sustainable financial growth.</p>
+
+                                <div class="mt-3 p-2 bg-black/20 rounded">
+                                    <p class="font-semibold text-yellow-300 mb-1">🏛️ Government Certified</p>
+                                    <p class="text-xs">Registered with C.A.C, SCUML, and Federal Ministry of Industry, Trade & Investment</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="relative z-20 mt-auto">
-                <div class="space-y-2 text-center">
-                    <flux:heading size="lg" class="text-2xl font-bold" tag="h1">
-                        Smart Commerce | Financial Empowerment
-                    </flux:heading>
-                    <div class="mt-4">
-                        <flux:heading class="text-lg opacity-90" tag="h2">
-                            Join our thriving marketplace where business meets financial growth. We provide cutting-edge tools and resources to help you build, scale, and manage your online business while maximizing your financial potential.
-                        </flux:heading>
-                        <meta name="description" content="Premier e-commerce platform offering comprehensive business solutions and financial empowerment tools. Join our community of successful entrepreneurs and unlock your business potential today.">
-                        <meta name="keywords" content="e-commerce platform, financial empowerment, online business, digital marketplace, business growth, entrepreneurship, smart commerce">
+                <div class="space-y-4 text-center">
+                    <div class="space-y-3">
+                        <h3 class="text-lg font-bold text-yellow-300">Our Mission</h3>
+                        <p class="text-sm opacity-90">To democratise wealth creation by transforming age-old cooperative savings into a scalable, digitised ecosystem that guarantees fairness, transparency, and long-term financial empowerment.</p>
                     </div>
                 </div>
             </div>

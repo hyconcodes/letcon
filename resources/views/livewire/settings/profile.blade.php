@@ -309,6 +309,6 @@ new class extends Component {
             </div>
         @endrole()
 
-        <livewire:settings.delete-user-form />
+        {{-- <livewire:settings.delete-user-form /> --}}
     </x-settings.layout>
 </section>

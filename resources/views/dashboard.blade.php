@@ -1,4 +1,115 @@
+@php
+    // Get recent earnings with user data (last 100 records for better performance)
+    $recentEarnings = \App\Models\Earning::with('user')
+        ->where('amount', '>', 0)
+        ->orderBy('earned_at', 'desc')
+        ->take(100)
+        ->get()
+        ->map(function($earning) {
+            return [
+                'username' => $earning->user->username ?? 'User',
+                'amount' => number_format($earning->amount, 2),
+                'time' => $earning->earned_at->diffForHumans(),
+                'type' => $earning->type === 'level_upgrade' ? 'upgraded to' : 'earned'
+            ];
+        });
+@endphp
+
 <x-layouts.app :title="__(config('app.name') . ' - Dashboard')">
+    <!-- Earnings Notifications Container -->
+    <div id="earnings-notifications" class="fixed bottom-4 right-4 z-50 space-y-3 w-72">
+        <!-- Notifications will be inserted here by JavaScript -->
+    </div>
+
+    <style>
+        .earnings-notification {
+            animation: slideIn 0.5s ease-out forwards;
+            transform: translateX(120%);
+            opacity: 0;
+        }
+
+        .earnings-notification.hide {
+            animation: slideOut 0.5s ease-in forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            to {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const earnings = @json($recentEarnings);
+            const container = document.getElementById('earnings-notifications');
+            let currentNotifications = 0;
+            const maxNotifications = 3;
+            const notificationDuration = 8000; // 8 seconds
+
+            if (earnings.length > 0) {
+                // Show first notification after a short delay
+                setTimeout(showRandomNotification, 2000);
+                
+                // Set interval for showing new notifications
+                const interval = setInterval(showRandomNotification, 10000);
+            }
+
+            function showRandomNotification() {
+                if (currentNotifications >= maxNotifications) return;
+                
+                const earning = earnings[Math.floor(Math.random() * earnings.length)];
+                const notification = document.createElement('div');
+                notification.className = 'earnings-notification bg-white rounded-lg shadow-lg p-4 border-l-4 border-green-500';
+                notification.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <svg class="h-6 w-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-900">
+                                ${earning.username} ${earning.type} ₦${earning.amount}
+                            </p>
+                            <p class="text-xs text-gray-500">${earning.time}</p>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.classList.add('hide')" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8">
+                            <span class="sr-only">Close</span>
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                
+                container.appendChild(notification);
+                currentNotifications++;
+                
+                // Force reflow to trigger animation
+                void notification.offsetWidth;
+                notification.style.transform = 'translateX(0)';
+                notification.style.opacity = '1';
+                
+                // Remove notification after duration
+                setTimeout(() => {
+                    notification.classList.add('hide');
+                    setTimeout(() => {
+                        container.removeChild(notification);
+                        currentNotifications--;
+                    }, 500);
+                }, notificationDuration);
+            }
+        });
+    </script>
     @if (session('status'))
         <div id="alert-message" class="relative bg-green-500 text-white p-4 rounded-md mb-4">
             {{ session('status') }}
@@ -169,30 +280,31 @@
                 </div>
             </div>
 
-            <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+            {{-- <div class="border-t border-gray-200 dark:border-gray-700 pt-4"> --}}
                 {{-- <h2 class="text-xl font-bold mb-4">Transaction History</h2> --}}
                 {{-- <h2 class="text-xl font-bold mb-4">......</h2> --}}
-                <img src="{{ asset('assets/lecton-dash.png') }}" alt="">
+                {{-- <img src="{{ asset('assets/lecton-dash.png') }}" alt=""> --}}
                 <!-- Add transaction history content here -->
-            </div>
+            {{-- </div> --}}
         </div>
         @endif
     </div>
 
     <!-- WhatsApp Floating Icon -->
-    <a href="https://wa.me/2347032468725" 
+    <a href="https://wa.me/2349072236347" 
        target="_blank"
-       class="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-colors duration-300 z-50 flex items-center justify-center">
+       class="fixed bottom-20 right-4 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition-colors duration-300 z-50 flex items-center justify-center">
         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
         </svg>
     </a>
 
-    <!-- Email Floating Icon -->
-    <a href="mailto:letconglobal@gmail.com"
-       class="fixed bottom-20 right-4 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-colors duration-300 z-50 flex items-center justify-center">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+    <!-- Telegram Floating Icon -->
+    <a href="https://t.me/+dG_0lmmyw8w4MWQ0" 
+       target="_blank"
+       class="fixed bottom-4 right-4 bg-blue-500 text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-colors duration-300 z-50 flex items-center justify-center">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.14-.29.222-.44.222-.107 0-.27-.03-.402-.14l-2.04-1.58-3.013-.94c-.64-.2-.645-.64.135-.954l11.566-4.458c.538-.196 1.056.13.85.94z"/>
         </svg>
     </a>
 </x-layouts.app>

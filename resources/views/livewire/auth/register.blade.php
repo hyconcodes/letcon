@@ -18,6 +18,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
     public string $password_confirmation = '';
     public string $ref_code = '';
     public string $user_type = 'individual';
+    public bool $terms_accepted = false;
 
     /**
      * Handle an incoming registration request.
@@ -31,6 +32,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
             'ref_code' => ['nullable', 'string'],
             'user_type' => ['required', 'in:individual,organization'],
+            'terms_accepted' => ['required', 'accepted'],
         ]);
 
         $referrer = null;
@@ -195,11 +197,61 @@ new #[Layout('components.layouts.auth')] class extends Component {
         />
 
         <div class="flex items-center justify-end">
-            <flux:button type="submit" variant="primary" class="w-full">
+            <!-- Terms and Conditions -->
+            <div class="mt-4">
+                <label class="flex items-start">
+                    <input type="checkbox" wire:model="terms_accepted" id="terms-checkbox" class="rounded border-zinc-300 text-primary-600 shadow-sm focus:ring-primary-500 mt-1" required>
+                    <span class="ml-2 text-sm text-zinc-600 dark:text-zinc-400">
+                        {{ __('I agree to the') }} 
+                        <a href="{{ route('terms-conditions') }}" target="_blank" class="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300">
+                            {{ __('Terms & Conditions') }}
+                        </a>
+                    </span>
+                </label>
+                @error('terms_accepted')
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <flux:button type="submit" variant="primary" class="w-full mt-4" id="register-button" disabled>
                 {{ __('Create account') }}
             </flux:button>
         </div>
     </form>
+
+    <!-- JavaScript to handle terms checkbox and button state -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const termsCheckbox = document.getElementById('terms-checkbox');
+            const registerButton = document.getElementById('register-button');
+
+            // Function to update button state
+            function updateButtonState() {
+                if (termsCheckbox.checked) {
+                    registerButton.disabled = false;
+                    registerButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                } else {
+                    registerButton.disabled = true;
+                    registerButton.classList.add('opacity-50', 'cursor-not-allowed');
+                }
+            }
+
+            // Initial state
+            updateButtonState();
+
+            // Listen for checkbox changes
+            termsCheckbox.addEventListener('change', updateButtonState);
+
+            // Also listen for Livewire property changes (in case of validation errors)
+            document.addEventListener('livewire:init', function() {
+                Livewire.on('property-updated', function(property, value) {
+                    if (property === 'terms_accepted') {
+                        updateButtonState();
+                    }
+                });
+            });
+        });
+    </script>
 
     <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
         <span>{{ __('Already have an account?') }}</span>
