@@ -37,11 +37,22 @@ new #[Layout('components.layouts.auth')] class extends Component {
             ]);
         }
 
+        // Check if user account is paused
+        $user = Auth::user();
+        if ($user->account_status === 'paused') {
+            Auth::logout();
+            Session::invalidate();
+            Session::regenerateToken();
+            
+            throw ValidationException::withMessages([
+                'username' => 'Your account has been paused. Please contact support for assistance.',
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
         // Check user role and redirect accordingly
-        $user = Auth::user();
         if ($user->hasRole('member')) {
             $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
         } else if ($user->hasAnyRole(['super-admin', 'admin'])) {

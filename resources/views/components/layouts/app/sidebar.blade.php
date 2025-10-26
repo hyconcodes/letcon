@@ -39,6 +39,11 @@
                         wire:navigate>{{ __('Manage Members') }}</flux:navlist.item>
                 @endcan
 
+                @role('super-admin')
+                    <flux:navlist.item icon="cog" :href="route('member.account.management')" :current="request()->routeIs('member.account.management')"
+                        wire:navigate>{{ __('Member Account Management') }}</flux:navlist.item>
+                @endrole
+
                 @canany(['view.wallet', 'fund.wallet', 'withdraw.wallet'])
                     <flux:navlist.item icon="wallet" :href="route('wallets')" :current="request()->routeIs('wallets')"
                         wire:navigate>{{ __('Wallets') }}</flux:navlist.item>

@@ -73,7 +73,10 @@ new class extends Component {
                     ['round' => 4, 'name' => 'LEVEL 4', 'amount' => '160K', 'payout' => '128K', 'emoji' => '🥇'],
                     ['round' => 5, 'name' => 'LEVEL 5', 'amount' => '320K', 'payout' => '256K', 'emoji' => '🏆'],
                     ['round' => 6, 'name' => 'LEVEL 6', 'amount' => '640K', 'payout' => '512K', 'emoji' => '👑'],
-                    ['round' => 7, 'name' => 'LEVEL 7', 'amount' => '1.28M', 'payout' => '2.3M', 'emoji' => '💎'],
+                    ['round' => 7, 'name' => 'LEVEL 7', 'amount' => '1.28M', 'payout' => '1.02M', 'emoji' => '💎'],
+                    ['round' => 8, 'name' => 'LEVEL 8', 'amount' => '2.56M', 'payout' => '2.05M', 'emoji' => '💫'],
+                    ['round' => 9, 'name' => 'LEVEL 9', 'amount' => '5.12M', 'payout' => '4.10M', 'emoji' => '⭐'],
+                    ['round' => 10, 'name' => 'LEVEL 10', 'amount' => '10M', 'payout' => '20M', 'emoji' => '🌟'],
                 ];
             @endphp
 

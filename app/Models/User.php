@@ -44,6 +44,7 @@ class User extends Authenticatable // implements MustVerifyEmail
         'kyc_image',
         'kyc_org_image',
         'user_type',
+        'account_status',
     ];
 
     /**

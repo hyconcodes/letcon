@@ -22,7 +22,6 @@ new class extends Component {
     public string $phone = '';
     public $picture = null;
     public $temp_picture = null;
-    public string $postal_code = '';
     public string $bank_name = '';
     public string $bank_code = '';
     public string $bank_account_name = '';
@@ -45,7 +44,6 @@ new class extends Component {
         $this->address = $user->address ?? '';
         $this->phone = $user->phone ?? '';
         $this->picture = $user->picture ?? '';
-        $this->postal_code = $user->postal_code ?? '';
         $this->bank_name = $user->bank_name ?? '';
         $this->bank_account_name = $user->bank_account_name ?? '';
         $this->bank_account_number = $user->bank_account_number ?? '';
@@ -134,7 +132,6 @@ new class extends Component {
             'address' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:20'],
             'temp_picture' => ['nullable', 'image', 'max:5024'], // 1MB Max
-            'postal_code' => ['required', 'string', 'max:20'],
         ]);
 
         if ($this->temp_picture) {
@@ -160,10 +157,10 @@ new class extends Component {
     {
         $user = Auth::user();
 
-        if (!is_null($user->bank_name) || !is_null($user->bank_account_name) || !is_null($user->bank_account_number)) {
-            Session::flash('bank-error', 'Bank information can only be updated once. Please contact admin support for changes.');
-            return;
-        }
+        // if (!is_null($user->bank_name) || !is_null($user->bank_account_name) || !is_null($user->bank_account_number)) {
+        //     Session::flash('bank-error', 'Bank information can only be updated once. Please contact admin support for changes.');
+        //     return;
+        // }
 
         if (empty($this->bank_account_name)) {
             Session::flash('bank-error', 'Please ensure the account number is verified before saving.');
@@ -258,7 +255,6 @@ new class extends Component {
                 <flux:input wire:model="state" :label="__('State')" type="text" required />
                 <flux:input wire:model="city" :label="__('City')" type="text" required />
                 <flux:input wire:model="address" :label="__('Address')" type="text" required />
-                <flux:input wire:model="postal_code" :label="__('Postal Code')" type="text" required />
             @endrole()
 
             <div class="flex items-center gap-4">

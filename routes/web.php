@@ -51,6 +51,10 @@ Route::middleware(['auth'])->group(function () {
         ->middleware(['permission:view.member|update.member|create.member|delete.member'])
         ->name('members');
 
+    Volt::route('admin/member-account-management', 'admins.member-account-management')
+        ->middleware(['role:super-admin', 'permission:view.member|update.member'])
+        ->name('member.account.management');
+
     Volt::route('admin/members-users-sys', 'admins.users')
         ->middleware(['permission:view.member'])
         ->name('users');

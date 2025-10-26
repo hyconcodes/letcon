@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 class LetconUpgrade extends Command
 {
-    protected $signature = 'letcon:upgrade';
+    protected $signature = 'letcon:upgrade-old';
     protected $description = 'Check referral payments and upgrade users automatically using strict GP pyramid rules with registration order priority for Level 3+';
 
     public function handle()
@@ -70,7 +70,7 @@ class LetconUpgrade extends Command
                 $join->on('users.id', '=', 'level_history.user_id')
                      ->whereColumn('level_history.to_level', 'users.level');
             })
-            ->whereBetween('users.level', [2, 7])
+            ->whereBetween('users.level', [2, 9])
             ->orderBy('level_history.upgraded_at', 'ASC') // Level arrival time priority
             ->select('users.*', 'level_history.upgraded_at as current_level_arrival')
             ->get();
@@ -180,7 +180,9 @@ class LetconUpgrade extends Command
             4 => 256000,
             5 => 512000,
             6 => 1024000,
-            7 => 2300000,
+            7 => 2048000,
+            8 => 4096000,
+            9 => 20000000,
         ];
 
         $earnings = $earningsPerLevel[$currentLevel] ?? 0;
